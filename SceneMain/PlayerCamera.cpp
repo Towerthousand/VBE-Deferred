@@ -2,6 +2,7 @@
 
 PlayerCamera::PlayerCamera(const std::string& cameraName, const vec3f& pos, const vec3f& rot) :
 	Camera(cameraName,pos,rot) {
+	setName(cameraName);
 }
 
 void PlayerCamera::update(float deltaTime) {
