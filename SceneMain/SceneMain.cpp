@@ -26,9 +26,22 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	DeferredContainer*renderer = new DeferredContainer();
 	renderer->addTo(this);
 
-	//add ball
 	DeferredModel* ball = new DeferredModel("ball","lava");
 	ball->addTo(renderer);
+	ball->pos.y = 2;
+	ball->scale = vec3f(3.0f);
+
+	DeferredModel* box = new DeferredModel("box","awesome");
+	box->addTo(renderer);
+	box->rot.x = 180;
+	box->pos.y = -10;
+	box->scale = vec3f(10.0f);
+
+	DeferredModel* monkey = new DeferredModel("monkey","null");
+	monkey->addTo(renderer);
+	monkey->scale = vec3f(7.0f);
+	monkey->pos = vec3f(0.0f,8,-10);
+	monkey->rot.x = 45;
 }
 
 SceneMain::~SceneMain() {
@@ -53,9 +66,12 @@ void SceneMain::loadResources() {
 	Meshes.add("quad",quad);
     Meshes.add("ball",Mesh::loadFromFile("data/meshes/lol.obj"));
     Meshes.add("box",Mesh::loadFromFile("data/meshes/cube.obj"));
+	Meshes.add("monkey",Mesh::loadFromFile("data/meshes/monkey.obj"));
     //textures
     Textures.add("lava",Texture::loadFromFile("data/textures/lava.png"));
     Textures.add("awesome",Texture::loadFromFile("data/textures/awesome.png"));
+	char pixels[4] = {char(200),char(20),char(20),char(255)};
+	Textures.add("null",Texture::loadFromRaw(pixels,1,1));
 
 	//program
 	Programs.add("standardDeferred",ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert","data/shaders/standardDeferred.frag"));

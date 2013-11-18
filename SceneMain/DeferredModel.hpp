@@ -11,6 +11,10 @@ class DeferredModel : public GameObject{
 		virtual void update(float deltaTime);
 		void draw() const;
 
+		vec3f pos;
+		vec3f rot;
+		vec3f scale;
+
 	protected:
 		virtual void drawDeferredModel() const;
 

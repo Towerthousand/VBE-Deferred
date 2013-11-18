@@ -39,11 +39,9 @@ void DeferredContainer::draw() const {
 //	glEnable(GL_DEPTH_TEST);
 	//FINAL TEXTURE RENDER
 	RenderTarget::bind(nullptr);
-	switch(texOption) {
-		case 0:quad.program->uniform("tex")->set(gBuffer->getTextureForAttachment(RenderTarget::DEPTH)); break;
-		case 1:quad.program->uniform("tex")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0)); break;
-		case 2:quad.program->uniform("tex")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR1)); break;
-	}
+	quad.program->uniform("depth")->set(gBuffer->getTextureForAttachment(RenderTarget::DEPTH));
+	quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
+	quad.program->uniform("normal")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR1));
 	quad.draw();
 }
 

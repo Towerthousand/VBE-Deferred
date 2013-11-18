@@ -2,7 +2,9 @@
 #include "DeferredContainer.hpp"
 #include "Camera.hpp"
 
-DeferredModel::DeferredModel(const std::string& meshID, const std::string& texID) : renderer((DeferredContainer*)getGame()->getObjectByName("deferred")), tex(texID) {
+DeferredModel::DeferredModel(const std::string& meshID, const std::string& texID) :
+	pos(0.0f), rot(0.0f), scale(1.0f),
+	renderer((DeferredContainer*)getGame()->getObjectByName("deferred")), tex(texID) {
 	model.mesh = Meshes.get(meshID);
 	model.program = Programs.get("standardDeferred");
 }
@@ -12,6 +14,12 @@ DeferredModel::~DeferredModel() {
 
 void DeferredModel::update(float deltaTime) {
 	(void) deltaTime;
+	transform = mat4f(1.0f);
+	transform = glm::translate(transform,pos);
+	transform = glm::rotate(transform,rot.x,vec3f(1,0,0));
+	transform = glm::rotate(transform,rot.y,vec3f(0,1,0));
+	transform = glm::rotate(transform,rot.z,vec3f(0,0,1));
+	transform = glm::scale(transform,scale);
 }
 
 void DeferredModel::draw() const {
@@ -29,5 +37,6 @@ void DeferredModel::drawDeferredModel() const {
 	model.program->uniform("MVP")->set(cam->projection*cam->view*fullTransform);
 	model.program->uniform("M")->set(fullTransform);
 	model.program->uniform("V")->set(cam->view);
+	model.program->uniform("diffuseTex")->set(Textures.get(tex));
 	model.draw();
 }
