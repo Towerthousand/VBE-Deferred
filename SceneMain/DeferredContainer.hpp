@@ -5,7 +5,7 @@
 class DeferredContainer : public ContainerObject {
 	public:
 
-		enum Technique {
+        enum DrawMode {
 			Deferred = 0,
 			Light
 		};
@@ -15,13 +15,15 @@ class DeferredContainer : public ContainerObject {
 
 		void update(float deltaTime);
 		void draw() const;
-		Technique getMode() const;
+        DrawMode getMode() const;
+        Texture* getDiffuse() const;
+        Texture* getDepth() const;
+        Texture* getNormal() const;
 
 	private:
 		RenderTarget* gBuffer;
-		mutable Technique drawMode;
-		Model quad;
-		int texOption;
+        mutable DrawMode drawMode;
+        Model quad;
 };
 
 #endif // DEFERREDCONTAINER_HPP

@@ -2,6 +2,7 @@
 #include "PlayerCamera.hpp"
 #include "DeferredContainer.hpp"
 #include "DeferredModel.hpp"
+#include "DeferredLight.hpp"
 
 SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	this->setName("SCENE");
@@ -42,6 +43,9 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	monkey->scale = vec3f(7.0f);
 	monkey->pos = vec3f(0.0f,8,-10);
 	monkey->rot.x = 45;
+
+    DeferredLight* light = new DeferredLight();
+    light->addTo(renderer);
 }
 
 SceneMain::~SceneMain() {
@@ -76,6 +80,7 @@ void SceneMain::loadResources() {
 	//program
 	Programs.add("standardDeferred",ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert","data/shaders/standardDeferred.frag"));
 	Programs.add("screenQuad",ShaderProgram::loadFromFile("data/shaders/quad.vert","data/shaders/quad.frag"));
+    Programs.add("lightQuad",ShaderProgram::loadFromFile("data/shaders/light.vert","data/shaders/light.frag"));
 }
 
 void SceneMain::update(float deltaTime) {

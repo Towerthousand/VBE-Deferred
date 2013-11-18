@@ -1,20 +1,18 @@
 #version 420
 
-uniform sampler2D depth;
-uniform sampler2D normal;
 uniform sampler2D diffuse;
 
-in vec2 v_texCoord;
+in vec2 vTexCoord;
 
 out vec4 finalColor;
 
 void main(void) {
-	if(v_texCoord.y > 2.0f/3.0f) {
-		float f=100.0;
-		float n = 0.01;
-		float z = (2 * n) / (f + n - texture( depth, v_texCoord ).x * (f - n));
-		finalColor = vec4(z,z,z,1);
-	}
-	else if(v_texCoord.y > 1.0f/3.0f) finalColor = texture( normal, v_texCoord);
-	else finalColor = texture( diffuse, v_texCoord );
+    // Ambient light properties
+    vec3 ambientLightColor = vec3(1.0f);
+    float ambientLightPower = 0.2f;
+
+    // material properties
+    vec3 matDiffuseColor = texture(diffuse,vTexCoord).xyz;
+
+    finalColor = vec4(matDiffuseColor*ambientLightColor*ambientLightPower,1.0);
 }
