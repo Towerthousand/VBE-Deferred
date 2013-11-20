@@ -16,9 +16,9 @@ void DeferredModel::update(float deltaTime) {
 	(void) deltaTime;
 	transform = mat4f(1.0f);
 	transform = glm::translate(transform,pos);
-	transform = glm::rotate(transform,rot.x,vec3f(1,0,0));
-	transform = glm::rotate(transform,rot.y,vec3f(0,1,0));
 	transform = glm::rotate(transform,rot.z,vec3f(0,0,1));
+	transform = glm::rotate(transform,rot.y,vec3f(0,1,0));
+	transform = glm::rotate(transform,rot.x,vec3f(1,0,0));
 	transform = glm::scale(transform,scale);
 }
 

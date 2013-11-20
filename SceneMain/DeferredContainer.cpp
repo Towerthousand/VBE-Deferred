@@ -33,7 +33,7 @@ void DeferredContainer::draw() const {
 
     //LIGHTS
     drawMode = Light;
-    glBlendFunc(GL_ONE,GL_ONE);
+	glBlendFunc(GL_ONE,GL_ONE);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_ALPHA_TEST);
     glDepthMask(GL_FALSE);

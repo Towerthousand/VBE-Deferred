@@ -29,7 +29,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 
 	DeferredModel* ball = new DeferredModel("ball","lava");
 	ball->addTo(renderer);
-	ball->pos.y = 2;
+	ball->pos.y = -1;
 	ball->scale = vec3f(3.0f);
 
 	DeferredModel* box = new DeferredModel("box","awesome");
@@ -38,18 +38,39 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	box->pos.y = -10;
 	box->scale = vec3f(10.0f);
 
-	DeferredModel* monkey = new DeferredModel("monkey","nullRed");
-	monkey->addTo(renderer);
-	monkey->scale = vec3f(7.0f);
-	monkey->pos = vec3f(0.0f,8,-10);
-	monkey->rot.x = 45;
+	DeferredModel* monkeyRed = new DeferredModel("monkey","nullRed");
+	monkeyRed->addTo(renderer);
+	monkeyRed->scale = vec3f(7.0f);
+	monkeyRed->pos = vec3f(0.0f,8,-10);
+	monkeyRed->rot.x = 45;
+
+	DeferredModel* monkeyGreen = new DeferredModel("monkey","nullGreen");
+	monkeyGreen->addTo(renderer);
+	monkeyGreen->scale = vec3f(7.0f);
+	monkeyGreen->pos = vec3f(0.0f,8,10);
+	monkeyGreen->rot.x = 45;
+	monkeyGreen->rot.y = 180;
+
+	DeferredModel* monkeyBlue = new DeferredModel("monkey","nullBlue");
+	monkeyBlue->addTo(renderer);
+	monkeyBlue->scale = vec3f(7.0f);
+	monkeyBlue->pos = vec3f(-10,8,0);
+	monkeyBlue->rot.x = 45;
+	monkeyBlue->rot.y = 90;
+
+	DeferredModel* monkeyWhite = new DeferredModel("monkey","nullWhite");
+	monkeyWhite->addTo(renderer);
+	monkeyWhite->scale = vec3f(7.0f);
+	monkeyWhite->pos = vec3f(10,8,0);
+	monkeyWhite->rot.x = 45;
+	monkeyWhite->rot.y = -90;
 
 	DeferredLight* light = new DeferredLight();
 	light->addTo(renderer);
 	light->setName("light");
 	light->color = vec3f(1,0,0);
 
-	DeferredModel* ballLight = new DeferredModel("ball","nullWhite");
+	DeferredModel* ballLight = new DeferredModel("ball","nullRed");
 	ballLight->addTo(renderer);
 	ballLight->scale = vec3f(0.5f);
 	ballLight->setName("ballLight");
@@ -59,7 +80,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light2->setName("light2");
 	light2->color = vec3f(0,1,0);
 
-	DeferredModel* ballLight2 = new DeferredModel("ball","nullWhite");
+	DeferredModel* ballLight2 = new DeferredModel("ball","nullGreen");
 	ballLight2->addTo(renderer);
 	ballLight2->scale = vec3f(0.5f);
 	ballLight2->setName("ballLight2");
@@ -69,7 +90,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light3->setName("light3");
 	light3->color = vec3f(0,0,1);
 
-	DeferredModel* ballLight3 = new DeferredModel("ball","nullWhite");
+	DeferredModel* ballLight3 = new DeferredModel("ball","nullBlue");
 	ballLight3->addTo(renderer);
 	ballLight3->scale = vec3f(0.5f);
 	ballLight3->setName("ballLight3");
@@ -113,8 +134,12 @@ void SceneMain::loadResources() {
 	Textures.add("awesome",Texture::loadFromFile("data/textures/awesome.png"));
 	char pixels[4] = {char(200),char(20),char(20),char(255)};
 	Textures.add("nullRed",Texture::loadFromRaw(pixels,1,1));
-	char pixels2[4] = {char(255),char(255),char(255),char(255)};
-	Textures.add("nullWhite",Texture::loadFromRaw(pixels2,1,1));
+	char pixels2[4] = {char(20),char(200),char(20),char(255)};
+	Textures.add("nullGreen",Texture::loadFromRaw(pixels2,1,1));
+	char pixels3[4] = {char(20),char(20),char(200),char(255)};
+	Textures.add("nullBlue",Texture::loadFromRaw(pixels3,1,1));
+	char pixels4[4] = {char(255),char(255),char(255),char(255)};
+	Textures.add("nullWhite",Texture::loadFromRaw(pixels4,1,1));
 
 	//program
 	Programs.add("standardDeferred",ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert","data/shaders/standardDeferred.frag"));
