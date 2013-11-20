@@ -2,9 +2,10 @@
 
 int main() {
     WINDOW_TITLE = "Deferred Test";
-    Game game;
+	Game* game = new Game();
     SceneMain* sc = new SceneMain();
-    sc->addTo(&game);
-    game.run();
+	sc->addTo(game);
+	game->run();
+	delete game;
     return 42;
 }

@@ -11,6 +11,7 @@ class DeferredLight : public GameObject{
 		virtual void update(float deltaTime);
 		void draw() const;
         vec3f pos;
+		vec3f color;
 
 	protected:
 		virtual void drawDeferredLight() const;

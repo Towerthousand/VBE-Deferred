@@ -2,10 +2,9 @@
 #include "DeferredContainer.hpp"
 #include "Camera.hpp"
 
-DeferredLight::DeferredLight() : pos(0.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
+DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
 	quad.mesh = Meshes.get("quad");
 	quad.program = Programs.get("lightQuad");
-	pos.y = 4;
 }
 
 DeferredLight::~DeferredLight() {
@@ -31,7 +30,8 @@ void DeferredLight::drawDeferredLight() const{
 	quad.program->uniform("diffuse")->set(renderer->getDiffuse());
 	quad.program->uniform("normal")->set(renderer->getNormal());
 	quad.program->uniform("depth")->set(renderer->getDepth());
-	quad.program->uniform("aspectRatio")->set(float(SCRWIDTH)/float(SCRHEIGHT));
 	quad.program->uniform("lightPos")->set(vec3f(poschachi.x,poschachi.y,poschachi.z));
+	quad.program->uniform("invProj")->set(glm::inverse(cam->projection));
+	quad.program->uniform("lightColor")->set(color);
 	quad.draw();
 }

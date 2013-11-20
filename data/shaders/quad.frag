@@ -9,7 +9,7 @@ out vec4 finalColor;
 void main(void) {
     // Ambient light properties
     vec3 ambientLightColor = vec3(1.0f);
-    float ambientLightPower = 0.2f;
+	float ambientLightPower = 0.05f;
 
     // material properties
     vec3 matDiffuseColor = texture(diffuse,vTexCoord).xyz;

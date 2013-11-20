@@ -1,56 +1,39 @@
 #version 420
 
 uniform sampler2D depth;
-uniform sampler2D normal;
+uniform sampler2D normal; //view space
 uniform sampler2D diffuse;
 uniform vec3 lightPos;
-uniform float aspectRatio;
+uniform vec3 lightColor;
+uniform mat4 invProj;
 
 in vec2 vTexCoord;
 
 out vec4 color;
 
-#define M_PI 3.1415926535897932384626433832795
-#define DEG_TO_RAD ((2.0*M_PI)/360.0)
+vec3 getFragPos() {
+	 vec4 sPos = vec4(vTexCoord*2-1, texture(depth, vTexCoord).x*2-1, 1.0);
+	 sPos = invProj * sPos;
+	 return sPos.xyz/sPos.w;
+}
 
 void main(void) {
-    // Sun light properties
-    vec3 sunLightColor = vec3(1.0f);
-    float sunLightPower = 1.0f;
+	//material properties
+	vec3 matDiffuseColor = texture(diffuse, vTexCoord).xyz;
+	vec3 matSpecularColor = vec3(2.0f);
 
-    // material properties
-    vec3 matDiffuseColor = texture(diffuse, vTexCoord).xyz;
-    vec3 matSpecularColor = vec3(0.5f);
+	//fragment light parameters
+	vec3 fragmentPos = getFragPos(); //view space
+	vec3 lightVector = normalize(lightPos - fragmentPos); //view space
+	vec3 normalVector = normalize(texture(normal, vTexCoord).xyz); //view space
 
-    //light calculations
-    float fov = 60*DEG_TO_RAD;
-
-    vec2 screenPos = vTexCoord*2-1;
-    screenPos.x *= aspectRatio;
-    screenPos *= tan(fov/2);
-
-    float zFar = 100.0;
-    float zNear = 0.01;
-
-    float z_b = texture(depth, vTexCoord).x;
-    float z_n = 2.0 * z_b - 1.0;
-    float z = 2.0 * zNear * zFar / (zFar + zNear - z_n * (zFar - zNear));
-
-    //float z = (2 * n) / (f + n - texture( depth, vTexCoord ).x * (f - n));
-    //z = n + z*(f-n);
-
-    vec3 fragmentPos = vec3(screenPos, -1.0)*z;
-
-    vec3 E = normalize(-fragmentPos);
-    vec3 lightVector = normalize(lightPos - fragmentPos);
-    vec3 normalVector = texture(normal, vTexCoord).xyz;
+	//phong shading
+	vec3 E = normalize(-fragmentPos);
     vec3 R = reflect(-normalize(lightVector), normalize(normalVector));
     float cosAlpha = clamp(dot(E,R), 0.0f, 1.0f);
     float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)),0.0f);
+	float attenuationFactor = -log (min (1.0, length(fragmentPos-lightPos) / 10.0));
 
-    // Sample the shadow map 16 times, 4 texture() calls * 4 samples each call
-    float visibility = 1.0;
-
-    color = vec4(matDiffuseColor*sunLightColor*sunLightPower*visibility*cosTheta + //sun light (diffuse)
-                 matSpecularColor*sunLightColor*sunLightPower*visibility*pow(cosAlpha,10)*cosTheta,1.0f); //sun light (specular)
+	color = vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)
+				 matSpecularColor*lightColor*pow(cosAlpha,50)*cosTheta,1.0f)*attenuationFactor; //sun light (specular)
 }
