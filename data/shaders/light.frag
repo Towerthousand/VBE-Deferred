@@ -27,7 +27,7 @@ void main(void) {
 
     vec2 screenPos = vTexCoord*2-1;
     screenPos.x *= aspectRatio;
-    screenPos /= tan(fov);
+    screenPos *= tan(fov/2);
 
     float zFar = 100.0;
     float zNear = 0.01;
