@@ -10,5 +10,5 @@ layout(location = 1) out vec4 normalOut;
 
 void main(void) {
 	normalOut = vec4(v_normal,1.0f);
-	colorOut = texture(diffuseTex,v_texCoord);
+        colorOut = texture(diffuseTex,v_texCoord);
 }

@@ -43,7 +43,7 @@ void DeferredContainer::draw() const {
     //quad.program->uniform("depth")->set(gBuffer->getTextureForAttachment(RenderTarget::DEPTH));
     quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
     //quad.program->uniform("normal")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR1));
-	//quad.draw();
+	quad.draw();
 
     glDepthMask(GL_TRUE);
     glEnable(GL_ALPHA_TEST);

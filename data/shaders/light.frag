@@ -4,6 +4,7 @@ uniform sampler2D depth;
 uniform sampler2D normal;
 uniform sampler2D diffuse;
 uniform vec3 lightPos;
+uniform float aspectRatio;
 
 in vec2 vTexCoord;
 
@@ -22,30 +23,34 @@ void main(void) {
     vec3 matSpecularColor = vec3(0.5f);
 
     //light calculations
-    float aspectRatio = 16.0f/9.0f; //width/height
-	float fov = 60*DEG_TO_RAD;
+    float fov = 60*DEG_TO_RAD;
 
     vec2 screenPos = vTexCoord*2-1;
     screenPos.x *= aspectRatio;
-    screenPos *= sin(fov);
+    screenPos /= tan(fov);
 
-    float f=100.0;
-    float n = 0.01;
-    float z = (2 * n) / (f + n - texture( depth, vTexCoord ).x * (f - n));
-    z = n + z*(f-n);
+    float zFar = 100.0;
+    float zNear = 0.01;
 
-	vec3 fragmentPos = vec3(screenPos, -1.0)*z;
+    float z_b = texture(depth, vTexCoord).x;
+    float z_n = 2.0 * z_b - 1.0;
+    float z = 2.0 * zNear * zFar / (zFar + zNear - z_n * (zFar - zNear));
 
-	vec3 E = normalize(-fragmentPos);
-	vec3 lightVector = normalize(lightPos - fragmentPos);
+    //float z = (2 * n) / (f + n - texture( depth, vTexCoord ).x * (f - n));
+    //z = n + z*(f-n);
+
+    vec3 fragmentPos = vec3(screenPos, -1.0)*z;
+
+    vec3 E = normalize(-fragmentPos);
+    vec3 lightVector = normalize(lightPos - fragmentPos);
     vec3 normalVector = texture(normal, vTexCoord).xyz;
-	vec3 R = reflect(-normalize(lightVector), normalize(normalVector));
+    vec3 R = reflect(-normalize(lightVector), normalize(normalVector));
     float cosAlpha = clamp(dot(E,R), 0.0f, 1.0f);
     float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)),0.0f);
 
     // Sample the shadow map 16 times, 4 texture() calls * 4 samples each call
-	float visibility = 1.0;
-	color = //vec4(fragmentPos, 1.0) + 0.1*
-            vec4(matDiffuseColor*sunLightColor*sunLightPower*visibility*cosTheta + //sun light (diffuse)
-				 matSpecularColor*sunLightColor*sunLightPower*visibility*pow(cosAlpha,10)*cosTheta,1.0f); //sun light (specular)
+    float visibility = 1.0;
+
+    color = vec4(matDiffuseColor*sunLightColor*sunLightPower*visibility*cosTheta + //sun light (diffuse)
+                 matSpecularColor*sunLightColor*sunLightPower*visibility*pow(cosAlpha,10)*cosTheta,1.0f); //sun light (specular)
 }
