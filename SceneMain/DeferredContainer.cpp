@@ -1,4 +1,5 @@
 #include "DeferredContainer.hpp"
+#include "Camera.hpp"
 
 DeferredContainer::DeferredContainer() : gBuffer(NULL), drawMode(Deferred) {
 	setName("deferred");
@@ -39,10 +40,10 @@ void DeferredContainer::draw() const {
     glDepthMask(GL_FALSE);
 
     ContainerObject::draw();
+    Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 
-    //quad.program->uniform("depth")->set(gBuffer->getTextureForAttachment(RenderTarget::DEPTH));
+    quad.program->uniform("MVP")->set(cam->projection);
     quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
-    //quad.program->uniform("normal")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR1));
 	quad.draw();
 
     glDepthMask(GL_TRUE);

@@ -6,6 +6,7 @@ uniform sampler2D diffuse;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform mat4 invProj;
+uniform float lightRadius;
 
 in vec2 vTexCoord;
 
@@ -32,8 +33,9 @@ void main(void) {
     vec3 R = reflect(-normalize(lightVector), normalize(normalVector));
     float cosAlpha = clamp(dot(E,R), 0.0f, 1.0f);
     float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)),0.0f);
-	float attenuationFactor = -log (min (1.0, length(fragmentPos-lightPos) / 10.0));
+        float attenuationFactor = max(0.0, 1-length(fragmentPos-lightPos)/lightRadius);
 
-	color = vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)
-				 matSpecularColor*lightColor*pow(cosAlpha,50)*cosTheta,1.0f)*attenuationFactor; //sun light (specular)
+        color = //vec4(1.0) + 0.0001*
+                vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)
+                                 matSpecularColor*lightColor*pow(cosAlpha,200)*cosTheta,1.0f)*attenuationFactor; //sun light (specular)
 }

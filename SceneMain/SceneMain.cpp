@@ -119,8 +119,8 @@ void SceneMain::loadResources() {
 		Vertex::Element(Vertex::Element(Vertex::Attribute::Position,Vertex::Element::Float,3))
 	};
 	std::vector<vec3f> data = {
-		vec3f(1,-1,-1),vec3f(1,1,-1),vec3f(-1,1,-1),
-		vec3f(-1,1,-1),vec3f(-1,-1,-1),vec3f(1,-1,-1)
+        vec3f(1,-1,0),vec3f(1,1,0),vec3f(-1,1,0),
+        vec3f(-1,1,0),vec3f(-1,-1,0),vec3f(1,-1,0)
 	};
 	Mesh* quad = Mesh::loadEmpty(Vertex::Format(elems));
 	quad->setVertexData(&data[0],6);
