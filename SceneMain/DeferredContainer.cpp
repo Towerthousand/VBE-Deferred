@@ -15,7 +15,8 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), drawMode(Deferred) {
 	quad.program = Programs.get("screenQuad");
 }
 
-DeferredContainer::~DeferredContainer() {
+DeferredContainer::~
+DeferredContainer() {
 }
 
 void DeferredContainer::update(float deltaTime) {
@@ -42,7 +43,7 @@ void DeferredContainer::draw() const {
     ContainerObject::draw();
     Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 
-    quad.program->uniform("MVP")->set(cam->projection);
+	quad.program->uniform("MVP")->set(mat4f(1.0f));
     quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
 	quad.draw();
 

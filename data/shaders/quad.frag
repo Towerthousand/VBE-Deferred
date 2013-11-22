@@ -2,7 +2,7 @@
 
 uniform sampler2D diffuse;
 
-in vec2 vTexCoord;
+in noperspective vec2 vTexCoord;
 
 out vec4 finalColor;
 

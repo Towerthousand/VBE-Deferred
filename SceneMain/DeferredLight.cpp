@@ -2,7 +2,7 @@
 #include "DeferredContainer.hpp"
 #include "Camera.hpp"
 
-DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), radius(3.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
+DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), radius(20.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
     quad.mesh = Meshes.get("quad");
     quad.program = Programs.get("lightQuad");
 }
@@ -30,24 +30,28 @@ void DeferredLight::drawDeferredLight() const{
 
     mat4f t(1.0);
     if(glm::length(cam->pos-pos) > radius) {
-        vec3f back = cam->pos-pos;
-        back = glm::normalize(back);
+		vec3f front = cam->pos-pos;
+		front = glm::normalize(front);
         vec3f dummyUp(0,1,0);
-        vec3f right = glm::cross(dummyUp,back);
+		vec3f right = glm::cross(dummyUp,front);
         right = glm::normalize(right);
-        vec3f up = glm::cross(back,right);
+		vec3f up = glm::cross(front,right);
         up = glm::normalize(up);
-        mat4f rot(right.x, right.y, right.z, 0,
-                  up.x   , up.y   , up.z   , 0,
-                  back.x , back.y , back.z , 0,
+		mat4f rot(right.x, up.x, front.x, 0,
+				  right.y, up.y, front.y   , 0,
+				  right.z, up.z, front.z , 0,
                   0      , 0      , 0      , 1);
+		rot = glm::transpose(rot);
 
 
-        t = glm::translate(mat4f(1.0),pos+vec3f(0,0,radius))*rot;
-        t = glm::scale(t,vec3f(radius));
+		t = glm::translate(mat4f(1.0),pos)*rot;
+		t = glm::scale(t,vec3f(radius));
+		t = glm::translate(t,vec3f(0,0,1));
+		quad.program->uniform("MVP")->set(cam->projection*cam->view*fullTransform*t);
     }
+	else
+		quad.program->uniform("MVP")->set(t);
 
-    quad.program->uniform("MVP")->set(cam->projection*cam->view*fullTransform*t);
     quad.program->uniform("diffuse")->set(renderer->getDiffuse());
     quad.program->uniform("normal")->set(renderer->getNormal());
     quad.program->uniform("depth")->set(renderer->getDepth());

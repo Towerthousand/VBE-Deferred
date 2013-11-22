@@ -8,7 +8,7 @@ uniform vec3 lightColor;
 uniform mat4 invProj;
 uniform float lightRadius;
 
-in vec2 vTexCoord;
+in noperspective  vec2 vTexCoord;
 
 out vec4 color;
 
@@ -35,7 +35,6 @@ void main(void) {
     float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)),0.0f);
         float attenuationFactor = max(0.0, 1-length(fragmentPos-lightPos)/lightRadius);
 
-        color = //vec4(1.0) + 0.0001*
-                vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)
+        color = vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)
                                  matSpecularColor*lightColor*pow(cosAlpha,200)*cosTheta,1.0f)*attenuationFactor; //sun light (specular)
 }
