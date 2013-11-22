@@ -5,8 +5,8 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), drawMode(Deferred) {
 	setName("deferred");
 	gBuffer = new RenderTarget(SCRWIDTH,SCRHEIGHT);
 	gBuffer->addTexture(RenderTarget::DEPTH,Texture::DEPTH_COMPONENT32); //Z-BUFFER
-	gBuffer->addTexture(RenderTarget::COLOR0,Texture::RGBA8); //COLOR
-	gBuffer->addTexture(RenderTarget::COLOR1,Texture::RGB16F); //NORMAL
+	gBuffer->addTexture(RenderTarget::COLOR0,Texture::RGB8); //COLOR
+	gBuffer->addTexture(RenderTarget::COLOR1,Texture::RGB16F); //NORMAL + brightness
 	gBuffer->build();
 	gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST,GL_NEAREST);
 	gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST,GL_NEAREST);
@@ -25,19 +25,20 @@ void DeferredContainer::update(float deltaTime) {
 
 void DeferredContainer::draw() const {
 	//G BUFFER
+	glDisable(GL_ALPHA_TEST);
+	glDisable(GL_BLEND);
 	drawMode = Deferred;
 	RenderTarget::bind(gBuffer);
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 	ContainerObject::draw();
+	glEnable(GL_BLEND);
 
-    //FINAL TEXTURE RENDER
-    RenderTarget::bind(nullptr);
+	RenderTarget::bind(nullptr); //draw to screen
 
     //LIGHTS
     drawMode = Light;
 	glBlendFunc(GL_ONE,GL_ONE);
-    glDisable(GL_DEPTH_TEST);
-    glDisable(GL_ALPHA_TEST);
+	glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
 
     ContainerObject::draw();
@@ -47,10 +48,10 @@ void DeferredContainer::draw() const {
     quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
 	quad.draw();
 
-    glDepthMask(GL_TRUE);
-    glEnable(GL_ALPHA_TEST);
+	glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
 }
 
 DeferredContainer::DrawMode DeferredContainer::getMode() const {
