@@ -31,8 +31,8 @@ void main(void) {
 
     //phong shading
     vec3 E = normalize(-fragmentPos);
-    vec3 R = reflect(-normalize(lightVector), normalize(normalVector));
-    float cosAlpha = clamp(dot(E,R), 0.0f, 1.0f);
+    vec3 H = normalize(lightVector+E);
+    float cosAlpha = clamp(dot(normalVector,H), 0.0f, 1.0f);
     float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)),0.0f);
     float attenuationFactor = max(0.0, 1-length(fragmentPos-lightPos)/lightRadius);
 
