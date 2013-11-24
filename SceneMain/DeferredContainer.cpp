@@ -6,7 +6,7 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), drawMode(Deferred) {
 	gBuffer = new RenderTarget(SCRWIDTH,SCRHEIGHT);
 	gBuffer->addTexture(RenderTarget::DEPTH,Texture::DEPTH_COMPONENT32); //Z-BUFFER
 	gBuffer->addTexture(RenderTarget::COLOR0,Texture::RGB8); //COLOR
-	gBuffer->addTexture(RenderTarget::COLOR1,Texture::RGB16F); //NORMAL + brightness
+	gBuffer->addTexture(RenderTarget::COLOR1,Texture::RGBA16F); //NORMAL + brightness
 	gBuffer->build();
 	gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST,GL_NEAREST);
 	gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST,GL_NEAREST);
@@ -45,7 +45,8 @@ void DeferredContainer::draw() const {
     Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 
 	quad.program->uniform("MVP")->set(mat4f(1.0f));
-    quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
+	quad.program->uniform("color0")->set(getColor0());
+	quad.program->uniform("color1")->set(getColor1());
 	quad.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
 	quad.draw();
 
@@ -59,14 +60,15 @@ DeferredContainer::DrawMode DeferredContainer::getMode() const {
     return drawMode;
 }
 
-Texture *DeferredContainer::getDiffuse() const {
+Texture *DeferredContainer::getColor0() const {
     return gBuffer->getTextureForAttachment(RenderTarget::COLOR0);
+}
+
+Texture *DeferredContainer::getColor1() const {
+	return gBuffer->getTextureForAttachment(RenderTarget::COLOR1);
 }
 
 Texture *DeferredContainer::getDepth() const {
     return gBuffer->getTextureForAttachment(RenderTarget::DEPTH);
 }
 
-Texture *DeferredContainer::getNormal() const {
-    return gBuffer->getTextureForAttachment(RenderTarget::COLOR1);
-}

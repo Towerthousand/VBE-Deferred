@@ -16,9 +16,9 @@ class DeferredContainer : public ContainerObject {
 		void update(float deltaTime);
 		void draw() const;
         DrawMode getMode() const;
-        Texture* getDiffuse() const;
+        Texture* getColor0() const;
         Texture* getDepth() const;
-        Texture* getNormal() const;
+        Texture* getColor1() const;
 
 	private:
 		RenderTarget* gBuffer;

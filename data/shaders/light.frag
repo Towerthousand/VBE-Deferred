@@ -1,8 +1,8 @@
 #version 420
 
 uniform sampler2D depth;
-uniform sampler2D normal; //view space
-uniform sampler2D diffuse;
+uniform sampler2D color0; //view space
+uniform sampler2D color1;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform mat4 invProj;
@@ -20,16 +20,20 @@ vec3 getFragPos(vec2 vTexCoord) {
 void main(void) {
     vec2 vTexCoord = gl_FragCoord.xy*invResolution;
 
+    vec4 valColor0 = texture(color0, vTexCoord);
+    vec4 valColor1 = texture(color1, vTexCoord);
+
     //material properties
-    vec3 matDiffuseColor = texture(diffuse, vTexCoord).xyz;
-    vec3 matSpecularColor = vec3(2.0f);
+    vec3 matDiffuseColor = valColor0.xyz;
+    vec3 matSpecularColor = vec3(valColor1.w);
 
     //fragment light parameters
     vec3 fragmentPos = getFragPos(vTexCoord); //view space
     vec3 lightVector = normalize(lightPos - fragmentPos); //view space
-    vec3 normalVector = normalize(texture(normal, vTexCoord).xyz); //view space
+    vec2 normalVector2 = valColor1.xy;
+    vec3 normalVector = vec3(normalVector2, sqrt(1-dot(normalVector2, normalVector2))); //view space
 
-    //phong shading
+    //Blinn-Phong shading
     vec3 E = normalize(-fragmentPos);
     vec3 H = normalize(lightVector+E);
     float cosAlpha = clamp(dot(normalVector,H), 0.0f, 1.0f);

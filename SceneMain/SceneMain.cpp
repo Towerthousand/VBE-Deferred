@@ -24,7 +24,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	pCam->addTo(this);
 
 	//add deferred renderer
-	DeferredContainer*renderer = new DeferredContainer();
+	DeferredContainer* renderer = new DeferredContainer();
 	renderer->addTo(this);
 
 	DeferredModel* ball = new DeferredModel("ball","lava");
@@ -65,22 +65,22 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	monkeyWhite->rot.x = 45;
 	monkeyWhite->rot.y = -90;
 
-	DeferredLight* light = new DeferredLight();
-	light->addTo(renderer);
-	light->setName("light");
-	light->color = vec3f(1,0,0);
+	DeferredLight* light1 = new DeferredLight();
+	light1->addTo(renderer);
+	light1->setName("light1");
+	light1->color = vec3f(1,0,0);
 
-	DeferredModel* ballLight = new DeferredModel("ball","nullRed");
-	ballLight->addTo(light);
-	ballLight->scale = vec3f(0.5f);
-	ballLight->setName("ballLight");
+	DeferredModel* ballLight1 = new DeferredModel("ball","nullRed", 1.0, 0.0);
+	ballLight1->addTo(light1);
+	ballLight1->scale = vec3f(0.5f);
+	ballLight1->setName("ballLight1");
 
 	DeferredLight* light2 = new DeferredLight();
 	light2->addTo(renderer);
 	light2->setName("light2");
 	light2->color = vec3f(0,1,0);
 
-	DeferredModel* ballLight2 = new DeferredModel("ball","nullGreen");
+	DeferredModel* ballLight2 = new DeferredModel("ball","nullGreen", 1.0, 0.0);
 	ballLight2->addTo(light2);
 	ballLight2->scale = vec3f(0.5f);
 	ballLight2->setName("ballLight2");
@@ -90,7 +90,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light3->setName("light3");
 	light3->color = vec3f(0,0,1);
 
-	DeferredModel* ballLight3 = new DeferredModel("ball","nullBlue");
+	DeferredModel* ballLight3 = new DeferredModel("ball","nullBlue", 1.0, 0.0);
 	ballLight3->addTo(light3);
 	ballLight3->scale = vec3f(0.5f);
 	ballLight3->setName("ballLight3");
@@ -100,7 +100,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light4->setName("light4");
 	light4->color = vec3f(1,1,1);
 
-	DeferredModel* ballLight4 = new DeferredModel("ball","nullWhite");
+	DeferredModel* ballLight4 = new DeferredModel("ball","nullWhite", 1.0, 0.0);
 	ballLight4->addTo(light4);
 	ballLight4->scale = vec3f(0.5f);
 	ballLight4->setName("ballLight4");
@@ -158,8 +158,8 @@ void SceneMain::update(float deltaTime) {
 	if(!Input::isKeyDown(sf::Keyboard::Space)) {
 		float circleWidth = 5+3*sin(GLOBALCLOCK.getElapsedTime().asSeconds());
 
-		DeferredLight* light = (DeferredLight*)getGame()->getObjectByName("light");
-		light->pos = vec3f(circleWidth*sin(5*GLOBALCLOCK.getElapsedTime().asSeconds()),2,circleWidth*cos(5*GLOBALCLOCK.getElapsedTime().asSeconds()));
+		DeferredLight* light1 = (DeferredLight*)getGame()->getObjectByName("light1");
+		light1->pos = vec3f(circleWidth*sin(5*GLOBALCLOCK.getElapsedTime().asSeconds()),2,circleWidth*cos(5*GLOBALCLOCK.getElapsedTime().asSeconds()));
 		DeferredLight* light2 = (DeferredLight*)getGame()->getObjectByName("light2");
 		light2->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)),2,circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)));
 		DeferredLight* light3 = (DeferredLight*)getGame()->getObjectByName("light3");

@@ -54,8 +54,8 @@ void DeferredLight::drawDeferredLight() const{
 		quad.program->uniform("MVP")->set(t);
 
 	quad.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
-    quad.program->uniform("diffuse")->set(renderer->getDiffuse());
-    quad.program->uniform("normal")->set(renderer->getNormal());
+	quad.program->uniform("color0")->set(renderer->getColor0());
+	quad.program->uniform("color1")->set(renderer->getColor1());
     quad.program->uniform("depth")->set(renderer->getDepth());
     quad.program->uniform("lightPos")->set(vec3f(posViewSpace.x,posViewSpace.y,posViewSpace.z));
     quad.program->uniform("invProj")->set(glm::inverse(cam->projection));

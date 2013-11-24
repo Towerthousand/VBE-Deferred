@@ -5,7 +5,7 @@
 class DeferredContainer;
 class DeferredModel : public GameObject{
 	public:
-		DeferredModel(const std::string& meshID, const std::string& texID);
+		DeferredModel(const std::string& meshID, const std::string& texID, float ambient = 0.1, float specular = 1.0);
 		virtual ~DeferredModel();
 
 		virtual void update(float deltaTime);
@@ -22,6 +22,8 @@ class DeferredModel : public GameObject{
 		DeferredContainer* renderer;
 		Model model;
 		std::string tex;
+
+		float ambient, specular;
 };
 
 #endif // DEFERREDMODEL_H

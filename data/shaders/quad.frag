@@ -1,18 +1,16 @@
 #version 420
 
-uniform sampler2D diffuse;
+uniform sampler2D color0;
+uniform sampler2D color1;
+
 uniform vec2 invResolution;
 
 out vec4 finalColor;
 
 void main(void) {
-    // Ambient light properties
-    vec3 ambientLightColor = vec3(1.0f);
-    float ambientLightPower = 0.05f;
-
-    // material properties
     vec2 vTexCoord = gl_FragCoord.xy*invResolution;
-    vec3 matDiffuseColor = texture(diffuse,vTexCoord).xyz;
+    vec4 valColor0 = texture(color0, vTexCoord);
+    vec4 valColor1 = texture(color1, vTexCoord);
 
-    finalColor = vec4(matDiffuseColor*ambientLightColor*ambientLightPower,1.0);
+    finalColor = vec4(valColor0.xyz * valColor1.z, 1.0);
 }

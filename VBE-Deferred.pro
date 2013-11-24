@@ -26,8 +26,8 @@ HEADERS += \
     particles/Particle.hpp
 
 OTHER_FILES += \
-	data/shaders/quad.vert \
-	data/shaders/quad.frag \
+    data/shaders/quad.vert \
+    data/shaders/quad.frag \
     data/shaders/standardDeferred.frag \
     data/shaders/standardDeferred.vert \
     data/shaders/light.frag
