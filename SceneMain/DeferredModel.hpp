@@ -15,6 +15,8 @@ class DeferredModel : public GameObject{
 		vec3f rot;
 		vec3f scale;
 
+		float ambient, specular;
+
 	protected:
 		virtual void drawDeferredModel() const;
 
@@ -23,7 +25,6 @@ class DeferredModel : public GameObject{
 		Model model;
 		std::string tex;
 
-		float ambient, specular;
 };
 
 #endif // DEFERREDMODEL_H

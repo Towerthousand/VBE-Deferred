@@ -70,7 +70,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light1->setName("light1");
 	light1->color = vec3f(1, 0, 0);
 
-	DeferredModel* ballLight1 = new DeferredModel("ball", "nullRed", 1.0, 0.0);
+	DeferredModel* ballLight1 = new DeferredModel("ball", "nullRed");
 	ballLight1->addTo(light1);
 	ballLight1->scale = vec3f(0.5f);
 	ballLight1->setName("ballLight1");

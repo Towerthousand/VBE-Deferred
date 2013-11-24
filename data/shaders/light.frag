@@ -1,7 +1,7 @@
 #version 420
 
 uniform sampler2D depth;
-uniform sampler2D color0; //view space
+uniform sampler2D color0;
 uniform sampler2D color1;
 uniform vec3 lightPos;
 uniform vec3 lightColor;

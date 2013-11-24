@@ -6,7 +6,7 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), drawMode(Deferred) {
 	gBuffer = new RenderTarget(SCRWIDTH, SCRHEIGHT);
 	gBuffer->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32); //Z-BUFFER
 	gBuffer->addTexture(RenderTarget::COLOR0, Texture::RGB8); //COLOR
-	gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMAL + brightness
+	gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMALX, NORMALY, 
 	gBuffer->build();
 	gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
 	gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST, GL_NEAREST);

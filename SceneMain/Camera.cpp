@@ -19,3 +19,7 @@ void Camera::update(float deltaTime) {
 	view = glm::rotate(view, rot.z, vec3f(0, 0, 1));
 	view = glm::translate(view, -pos);
 }
+
+vec3f Camera::getWorldPos() {
+	return vec3f(fullTransform*vec4f(pos,1.0));
+}

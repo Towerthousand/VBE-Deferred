@@ -7,6 +7,7 @@ class Camera : public GameObject {
 		Camera(const std::string &cameraName, const vec3f& pos = vec3f(0.0f), const vec3f& rot = vec3f(0.0f));
 
 		void update(float deltaTime);
+		vec3f getWorldPos();
 
 		vec3f pos;
 		vec3f rot;
