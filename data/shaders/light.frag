@@ -30,12 +30,12 @@ void main(void) {
     //fragment light parameters
     vec3 fragmentPos = getFragPos(vTexCoord); //view space
     vec3 lightVector = normalize(lightPos - fragmentPos); //view space
+
+    //Decode normal
     vec2 fenc = valColor1.xy*4;
     float f = dot(fenc,fenc);
     float  g = sqrt(1-f/4);
     vec3 normalVector = vec3(fenc*g, 1-f/2);
-
-//    vec3 normalVector = vec3(normalVector2, sqrt(1-dot(normalVector2, normalVector2))); //view space
 
     //Blinn-Phong shading
     vec3 E = normalize(-fragmentPos);
