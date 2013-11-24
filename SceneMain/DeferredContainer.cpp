@@ -46,6 +46,7 @@ void DeferredContainer::draw() const {
 
 	quad.program->uniform("MVP")->set(mat4f(1.0f));
     quad.program->uniform("diffuse")->set(gBuffer->getTextureForAttachment(RenderTarget::COLOR0));
+	quad.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
 	quad.draw();
 
 	glDepthMask(GL_TRUE);

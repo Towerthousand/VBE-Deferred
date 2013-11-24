@@ -53,6 +53,7 @@ void DeferredLight::drawDeferredLight() const{
 	else
 		quad.program->uniform("MVP")->set(t);
 
+	quad.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
     quad.program->uniform("diffuse")->set(renderer->getDiffuse());
     quad.program->uniform("normal")->set(renderer->getNormal());
     quad.program->uniform("depth")->set(renderer->getDepth());

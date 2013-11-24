@@ -7,24 +7,25 @@ uniform vec3 lightPos;
 uniform vec3 lightColor;
 uniform mat4 invProj;
 uniform float lightRadius;
-
-in noperspective  vec2 vTexCoord;
+uniform vec2 invResolution;
 
 out vec4 color;
 
-vec3 getFragPos() {
+vec3 getFragPos(vec2 vTexCoord) {
     vec4 sPos = vec4(vTexCoord*2-1, texture(depth, vTexCoord).x*2-1, 1.0);
     sPos = invProj * sPos;
     return sPos.xyz/sPos.w;
 }
 
 void main(void) {
+    vec2 vTexCoord = gl_FragCoord.xy*invResolution;
+
     //material properties
     vec3 matDiffuseColor = texture(diffuse, vTexCoord).xyz;
     vec3 matSpecularColor = vec3(2.0f);
 
     //fragment light parameters
-    vec3 fragmentPos = getFragPos(); //view space
+    vec3 fragmentPos = getFragPos(vTexCoord); //view space
     vec3 lightVector = normalize(lightPos - fragmentPos); //view space
     vec3 normalVector = normalize(texture(normal, vTexCoord).xyz); //view space
 
