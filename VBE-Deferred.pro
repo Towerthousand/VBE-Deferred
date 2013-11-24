@@ -8,7 +8,10 @@ SOURCES += main.cpp \
     SceneMain/PlayerCamera.cpp \
     SceneMain/DeferredModel.cpp \
     SceneMain/DeferredContainer.cpp \
-    SceneMain/DeferredLight.cpp
+    SceneMain/DeferredLight.cpp \
+    particles/ParticleSystem.cpp \
+    particles/ParticleEmitter.cpp \
+    particles/Particle.cpp
 
 HEADERS += \
     commons.hpp \
@@ -17,7 +20,10 @@ HEADERS += \
     SceneMain/PlayerCamera.hpp \
     SceneMain/DeferredModel.hpp \
     SceneMain/DeferredContainer.hpp \
-    SceneMain/DeferredLight.hpp
+    SceneMain/DeferredLight.hpp \
+    particles/ParticleSystem.hpp \
+    particles/ParticleEmitter.hpp \
+    particles/Particle.hpp
 
 OTHER_FILES += \
 	data/shaders/quad.vert \
