@@ -14,8 +14,8 @@ void Camera::update(float deltaTime) {
 	}
 
 	view = mat4f(1.0f);
-	view = glm::rotate(view,rot.x,vec3f(1,0,0));
-	view = glm::rotate(view,rot.y,vec3f(0,1,0));
-	view = glm::rotate(view,rot.z,vec3f(0,0,1));
+	view = glm::rotate(view, rot.x, vec3f(1, 0, 0));
+	view = glm::rotate(view, rot.y, vec3f(0, 1, 0));
+	view = glm::rotate(view, rot.z, vec3f(0, 0, 1));
 	view = glm::translate(view, -pos);
 }

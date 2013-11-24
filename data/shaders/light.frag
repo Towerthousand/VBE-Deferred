@@ -36,10 +36,10 @@ void main(void) {
     //Blinn-Phong shading
     vec3 E = normalize(-fragmentPos);
     vec3 H = normalize(lightVector+E);
-    float cosAlpha = clamp(dot(normalVector,H), 0.0f, 1.0f);
-    float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)),0.0f);
+    float cosAlpha = clamp(dot(normalVector, H), 0.0f, 1.0f);
+    float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)), 0.0f);
     float attenuationFactor = max(0.0, 1-length(fragmentPos-lightPos)/lightRadius);
 
     color = vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)
-                 matSpecularColor*lightColor*pow(cosAlpha,100)*cosTheta,1.0f)*attenuationFactor; //sun light (specular)
+                 matSpecularColor*lightColor*pow(cosAlpha, 100)*cosTheta, 1.0f)*attenuationFactor; //sun light (specular)
 }

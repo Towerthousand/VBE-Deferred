@@ -13,7 +13,7 @@ ParticleEmitter::~ParticleEmitter() {
 
 void ParticleEmitter::update(float deltaTime) {
 	VBE_ASSERT(period > 0, "Invalid particle emitter period. Period must be bigger than 0.");
-	currWorldPos = vec3f(fullTransform*vec4f(0,0,0,1));
+	currWorldPos = vec3f(fullTransform*vec4f(0, 0, 0, 1));
 	while(state < deltaTime) {
 		state += period;
 		spawnParticle(state, deltaTime);

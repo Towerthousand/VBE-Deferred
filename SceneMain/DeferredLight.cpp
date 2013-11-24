@@ -33,21 +33,21 @@ void DeferredLight::drawDeferredLight() const{
     if(glm::length(cam->pos-pos) > radius) {
 		vec3f front = cam->pos-pos;
 		front = glm::normalize(front);
-        vec3f dummyUp(0,1,0);
-		vec3f right = glm::cross(dummyUp,front);
+		vec3f dummyUp(0, 1, 0);
+		vec3f right = glm::cross(dummyUp, front);
         right = glm::normalize(right);
-		vec3f up = glm::cross(front,right);
+		vec3f up = glm::cross(front, right);
         up = glm::normalize(up);
 		mat4f rot(right.x, up.x, front.x, 0,
-				  right.y, up.y, front.y   , 0,
-				  right.z, up.z, front.z , 0,
-                  0      , 0      , 0      , 1);
+				  right.y, up.y, front.y, 0,
+				  right.z, up.z, front.z, 0,
+				  0      , 0  , 0      , 1);
 		rot = glm::transpose(rot);
 
 
 		t = rot;
-		t = glm::scale(t,vec3f(radius));
-		t = glm::translate(t,vec3f(0,0,1));
+		t = glm::scale(t, vec3f(radius));
+		t = glm::translate(t, vec3f(0, 0, 1));
 		quad.program->uniform("MVP")->set(cam->projection*cam->view*fullTransform*t);
     }
 	else
@@ -57,7 +57,7 @@ void DeferredLight::drawDeferredLight() const{
 	quad.program->uniform("color0")->set(renderer->getColor0());
 	quad.program->uniform("color1")->set(renderer->getColor1());
     quad.program->uniform("depth")->set(renderer->getDepth());
-    quad.program->uniform("lightPos")->set(vec3f(posViewSpace.x,posViewSpace.y,posViewSpace.z));
+	quad.program->uniform("lightPos")->set(vec3f(posViewSpace.x, posViewSpace.y, posViewSpace.z));
     quad.program->uniform("invProj")->set(glm::inverse(cam->projection));
     quad.program->uniform("lightColor")->set(color);
     quad.program->uniform("lightRadius")->set(radius);

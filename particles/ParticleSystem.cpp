@@ -10,9 +10,9 @@ ParticleSystem::ParticleSystem() :
 	elements.push_back(Vertex::Element(Vertex::Attribute::get("a_size"), Vertex::Element::Float, 1));
 	elements.push_back(Vertex::Element(Vertex::Attribute::get("a_texIndex"), Vertex::Element::Int, 1));
 
-	model.mesh = Mesh::loadEmpty(Vertex::Format(elements),Mesh::STREAM);
+	model.mesh = Mesh::loadEmpty(Vertex::Format(elements), Mesh::STREAM);
 	model.mesh->setPrimitiveType(Mesh::POINTS);
-	model.program = ShaderProgram::loadFromString(vertexShader,geometryShader,fragmentShader);
+	model.program = ShaderProgram::loadFromString(vertexShader, geometryShader, fragmentShader);
 	setName("particleSystem");
 	setUpdatePriority(-100);
 	setDrawPriority(100);
@@ -117,28 +117,28 @@ const vec2[4] texCoords = { \
 const vec2[4] displacements = { \
 	vec2( 1, 1), \
 	vec2(-1, 1), \
-	vec2( 1,-1), \
-	vec2(-1,-1) \
+	vec2( 1, -1), \
+	vec2(-1, -1) \
 }; \
 \
 void main() { \
 	vec3 front = normalize(gl_in[0].gl_Position.xyz); \
-	vec3 vel = vec3(geom_vel[0],0.0f); \
-	vec3 up = cross(front,vel); \
+	vec3 vel = vec3(geom_vel[0], 0.0f); \
+	vec3 up = cross(front, vel); \
 	\
 	mat3 transform = mat3(1.0); \
 	\
 	if(length(up) < 0.0001) { \
 		up = vec3(0.0, 1.0, 0.0); \
-		vec3 right = normalize(cross(front,up)); \
+		vec3 right = normalize(cross(front, up)); \
 		up = cross(front, right); \
-		transform = mat3(right,up,front); \
+		transform = mat3(right, up, front); \
 	} \
 	else { \
 		up = normalize(up); \
-		vec3 right = normalize(cross(front,up)); \
+		vec3 right = normalize(cross(front, up)); \
 		float len = length(vel); \
-		transform = mat3(right*(1+len*0.2),up,front); \
+		transform = mat3(right*(1+len*0.2), up, front); \
 	} \
 	\
 	for(int i = 0; i < 4; i++) { \
@@ -162,6 +162,6 @@ const std::string ParticleSystem::fragmentShader (
 in vec2 v_texCoord; \
 in vec4 v_color; \
 void main() { \
-	gl_FragColor = v_color*texture(textureSheet,v_texCoord); \
+	gl_FragColor = v_color*texture(textureSheet, v_texCoord); \
 }"
 );

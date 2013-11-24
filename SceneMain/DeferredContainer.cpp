@@ -3,13 +3,13 @@
 
 DeferredContainer::DeferredContainer() : gBuffer(NULL), drawMode(Deferred) {
 	setName("deferred");
-	gBuffer = new RenderTarget(SCRWIDTH,SCRHEIGHT);
-	gBuffer->addTexture(RenderTarget::DEPTH,Texture::DEPTH_COMPONENT32); //Z-BUFFER
-	gBuffer->addTexture(RenderTarget::COLOR0,Texture::RGB8); //COLOR
-	gBuffer->addTexture(RenderTarget::COLOR1,Texture::RGBA16F); //NORMAL + brightness
+	gBuffer = new RenderTarget(SCRWIDTH, SCRHEIGHT);
+	gBuffer->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32); //Z-BUFFER
+	gBuffer->addTexture(RenderTarget::COLOR0, Texture::RGB8); //COLOR
+	gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMAL + brightness
 	gBuffer->build();
-	gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST,GL_NEAREST);
-	gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST,GL_NEAREST);
+	gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST, GL_NEAREST);
 
 	quad.mesh = Meshes.get("quad");
 	quad.program = Programs.get("screenQuad");
@@ -37,7 +37,7 @@ void DeferredContainer::draw() const {
 
     //LIGHTS
     drawMode = Light;
-	glBlendFunc(GL_ONE,GL_ONE);
+	glBlendFunc(GL_ONE, GL_ONE);
 	glDisable(GL_DEPTH_TEST);
     glDepthMask(GL_FALSE);
 
@@ -52,7 +52,7 @@ void DeferredContainer::draw() const {
 
 	glDepthMask(GL_TRUE);
     glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_ALPHA_TEST);
 }
 

@@ -13,6 +13,6 @@ out vec3 v_normal;
 
 void main(void) {
 	v_texCoord = a_texCoord;
-	v_normal = normalize(vec4(V*M*vec4(a_normal,0.0)).xyz);
-        gl_Position = MVP * vec4(a_position,1.0);
+        v_normal = normalize(vec4(V*M*vec4(a_normal, 0.0)).xyz);
+        gl_Position = MVP * vec4(a_position, 1.0);
 }
