@@ -12,8 +12,8 @@ void main(void) {
     vec4 valColor0 = texture(color0, vTexCoord);
     vec4 valColor1 = texture(color1, vTexCoord);
 
-    if(valColor1.z > 0 || length(valColor0.xyz) > 0.95)
+    if(valColor1.z > 0 || length(valColor0.xyz) > 0.99)
         finalColor = vec4(valColor0.xyz, 1.0);
-//    else
-//        finalColor = vec4(vec3(0.0),1);
+    else
+        finalColor = vec4(vec3(0.0),1);
 }
