@@ -17,12 +17,13 @@ class DeferredContainer : public ContainerObject {
 		void draw() const;
         DrawMode getMode() const;
         Texture* getColor0() const;
-        Texture* getDepth() const;
-        Texture* getColor1() const;
+		Texture* getColor1() const;
+		Texture* getDepth() const;
 
 	private:
 		RenderTarget* gBuffer;
 		RenderTarget* noBlur;
+		RenderTarget* blurMask;
 		RenderTarget* horitzontalBlurred;
 		RenderTarget* blurred;
         mutable DrawMode drawMode;

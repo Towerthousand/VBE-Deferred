@@ -24,7 +24,6 @@ vec3 decodeNormal(vec2 enc) {
     float f = dot(fenc,fenc);
     float g = sqrt(1-f/4);
     return vec3(fenc*g, 1-f/2);
-
 }
 
 void main(void) {

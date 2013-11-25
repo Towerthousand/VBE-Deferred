@@ -55,7 +55,6 @@ void ParticleSystem::draw() const {
 
 	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 
-	//glDisable(GL_CULL_FACE);
 	glDepthMask(GL_FALSE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 	model.program->uniform("modelViewMatrix")->set(cam->view*fullTransform);
