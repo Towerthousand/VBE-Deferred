@@ -16,27 +16,31 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzonta
 	noBlur->build();
 	noBlur->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
 
+	float blurSize = 3;
+	float blurSizeDivisor = std::pow(2,blurSize);
+
 	blurMask = new RenderTarget(SCRWIDTH, SCRHEIGHT);
 	blurMask->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
 	blurMask->build();
 	blurMask->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
 
-	horitzontalBlurred = new RenderTarget(SCRWIDTH/16, SCRHEIGHT/16);
+	horitzontalBlurred = new RenderTarget(SCRWIDTH/blurSizeDivisor, SCRHEIGHT/blurSizeDivisor);
 	horitzontalBlurred->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
 	horitzontalBlurred->build();
 	horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_LINEAR, GL_LINEAR);
+	horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0)->setWrap(GL_CLAMP_TO_EDGE);
 
-	blurred = new RenderTarget(SCRWIDTH/16, SCRHEIGHT/16);
+	blurred = new RenderTarget(SCRWIDTH/blurSizeDivisor, SCRHEIGHT/blurSizeDivisor);
 	blurred->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
 	blurred->build();
 	blurred->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_LINEAR, GL_LINEAR);
+	blurred->getTextureForAttachment(RenderTarget::COLOR0)->setWrap(GL_CLAMP_TO_EDGE);
 
 	quad.mesh = Meshes.get("quad");
 	quad.program = Programs.get("ambientPass");
 }
 
-DeferredContainer::~
-DeferredContainer() {
+DeferredContainer::~DeferredContainer() {
 }
 
 void DeferredContainer::update(float deltaTime) {

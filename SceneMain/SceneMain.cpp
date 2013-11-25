@@ -65,7 +65,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	monkeyBlue->rot.x = 45;
 	monkeyBlue->rot.y = 90;
 
-	DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite",0,100.0);
+	DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite");
 	monkeyWhite->addTo(renderer);
 	monkeyWhite->scale = vec3f(7.0f);
 	monkeyWhite->pos = vec3f(10, 8, 0);
