@@ -6,7 +6,7 @@ DeferredModel::DeferredModel(const std::string& meshID, const std::string& texID
 	pos(0.0f), rot(0.0f), scale(1.0f), ambient(ambient), specular(specular),
 	renderer((DeferredContainer*)getGame()->getObjectByName("deferred")), tex(texID) {
 	model.mesh = Meshes.get(meshID);
-	model.program = Programs.get("standardDeferred");
+	model.program = Programs.get("deferredModel");
 }
 
 DeferredModel::~DeferredModel() {

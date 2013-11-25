@@ -4,7 +4,7 @@
 
 DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), radius(20.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
     quad.mesh = Meshes.get("quad");
-    quad.program = Programs.get("lightQuad");
+	quad.program = Programs.get("deferredLight");
 }
 
 DeferredLight::~DeferredLight() {

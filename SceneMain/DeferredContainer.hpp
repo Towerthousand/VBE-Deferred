@@ -22,8 +22,11 @@ class DeferredContainer : public ContainerObject {
 
 	private:
 		RenderTarget* gBuffer;
+		RenderTarget* noBlur;
+		RenderTarget* horitzontalBlurred;
+		RenderTarget* blurred;
         mutable DrawMode drawMode;
-        Model quad;
+		mutable Model quad;
 };
 
 #endif // DEFERREDCONTAINER_HPP

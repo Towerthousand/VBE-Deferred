@@ -29,11 +29,14 @@ HEADERS += \
 
 OTHER_FILES += \
     data/shaders/quad.vert \
-    data/shaders/quad.frag \
     data/shaders/standardDeferred.frag \
     data/shaders/standardDeferred.vert \
     data/shaders/light.frag \
     data/shaders/particles.frag \
     data/shaders/particles.vert \
-    data/shaders/particles.geom
+    data/shaders/particles.geom \
+    data/shaders/ambientPass.frag \
+    data/shaders/blurPassVertical.frag \
+    data/shaders/blurPassHoritzontal.frag \
+    data/shaders/quad.frag
 

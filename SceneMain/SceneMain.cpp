@@ -65,7 +65,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	monkeyBlue->rot.x = 45;
 	monkeyBlue->rot.y = 90;
 
-	DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite");
+	DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite",0,100.0);
 	monkeyWhite->addTo(renderer);
 	monkeyWhite->scale = vec3f(7.0f);
 	monkeyWhite->pos = vec3f(10, 8, 0);
@@ -165,9 +165,12 @@ void SceneMain::loadResources() {
 	Textures.add("nullWhite", Texture::loadFromRaw(pixels5, 1, 1));
 
 	//program
-	Programs.add("standardDeferred", ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert", "data/shaders/standardDeferred.frag"));
-	Programs.add("screenQuad", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/quad.frag"));
-	Programs.add("lightQuad", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/light.frag"));
+	Programs.add("deferredModel", ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert", "data/shaders/standardDeferred.frag"));
+	Programs.add("deferredLight", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/light.frag"));
+	Programs.add("ambientPass", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/ambientPass.frag"));
+	Programs.add("blurPassVertical", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/blurPassVertical.frag"));
+	Programs.add("blurPassHoritzontal", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/blurPassHoritzontal.frag"));
+	Programs.add("textureToScreen", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/quad.frag"));
 }
 
 void SceneMain::update(float deltaTime) {

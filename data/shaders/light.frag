@@ -5,6 +5,7 @@ uniform sampler2D color0;
 uniform sampler2D color1;
 uniform vec3 lightPos;
 uniform vec3 lightColor;
+
 uniform mat4 invProj;
 uniform float lightRadius;
 uniform vec2 invResolution;
