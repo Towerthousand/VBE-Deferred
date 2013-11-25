@@ -19,6 +19,8 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	glEnable(GL_CULL_FACE); //enable backface culling
 	glCullFace(GL_BACK);
 
+	getGame()->getWindow().setVerticalSyncEnabled(true);
+
 	//add player cam
 	PlayerCamera* pCam = new PlayerCamera("playerCam", vec3f(0, 10, 15), vec3f(45, 0, 0));
 	pCam->projection = glm::perspective(FOV, float(SCRWIDTH)/float(SCRHEIGHT), ZNEAR, ZFAR);
@@ -32,11 +34,10 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	system->addTo(renderer);
 	system->setTextureSheet(Textures.get("particleSheet"), 2);
 
-
-	DeferredModel* ball = new DeferredModel("bunny", "lava");
+	DeferredModel* ball = new DeferredModel("ball", "lava");
 	ball->addTo(renderer);
 	ball->pos.y = -1;
-	ball->scale = vec3f(0.5f);
+	ball->scale = vec3f(3.0f);
 
 	DeferredModel* box = new DeferredModel("box", "awesome");
 	box->addTo(renderer);
@@ -145,9 +146,8 @@ void SceneMain::loadResources() {
 	quad->setPrimitiveType(Mesh::TRIANGLES);
 	Meshes.add("quad", quad);
 	Meshes.add("ball", Mesh::loadFromFile("data/meshes/sphere.obj"));
-	Meshes.add("box", Mesh::loadFromFile("data/meshes/cubeHi.obj"));
+	Meshes.add("box", Mesh::loadFromFile("data/meshes/cube.obj"));
 	Meshes.add("monkey", Mesh::loadFromFile("data/meshes/monkey.obj"));
-	Meshes.add("bunny", Mesh::loadFromFile("data/meshes/bunny.obj"));
 
 	//textures
 	Textures.add("particleSheet", Texture::loadFromFile("data/textures/particleSheet.png"));

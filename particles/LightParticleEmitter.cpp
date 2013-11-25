@@ -12,13 +12,13 @@ Particle LightParticleEmitter::makeParticle(float frameTimePassed, float deltaTi
 	(void) deltaTime;
 	vec3f vel = glm::sphericalRand(3.0f);
 	Particle pt;
-	pt.life = 0.1;
+	pt.life = 0.2;
 	pt.startSize =1;
 	pt.endSize = 0.5;
 	pt.startCol = vec4f(col, 0.7);
 	pt.endCol = vec4f(col, 0);
-	pt.v = (currWorldPos - oldWorldPos )*-30.0f + vel;
-	pt.p = position + pt.v/10.0f;
+	pt.v = glm::length(position-oldWorldPos) > 0? glm::normalize(position - oldWorldPos )*-2.0f + vel:vel;
+	pt.p = position + (glm::length(position-oldWorldPos) > 0? (position - oldWorldPos)*2.0f:vec3f(0.0f));
 	pt.a = vec3f(0,1,0);
 	pt.texIndex = 1;
 	return pt;
