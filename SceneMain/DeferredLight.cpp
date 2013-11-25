@@ -58,5 +58,5 @@ void DeferredLight::drawDeferredLight() const{
     quad.program->uniform("invProj")->set(glm::inverse(cam->projection));
     quad.program->uniform("lightColor")->set(color);
     quad.program->uniform("lightRadius")->set(radius);
-    quad.draw();
+	quad.draw();
 }

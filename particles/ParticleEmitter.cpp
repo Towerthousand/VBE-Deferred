@@ -1,5 +1,6 @@
 #include "ParticleEmitter.hpp"
 #include "ParticleSystem.hpp"
+#include "glm/gtc/random.hpp"
 
 ParticleEmitter::ParticleEmitter(int particlesPerSecond)
 	: oldWorldPos(0.0f), currWorldPos(0.0f),

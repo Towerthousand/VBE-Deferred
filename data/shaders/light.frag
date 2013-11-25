@@ -17,6 +17,15 @@ vec3 getFragPos(vec2 vTexCoord) {
     return sPos.xyz/sPos.w;
 }
 
+vec3 decodeNormal(vec2 enc) {
+    //Decode normal
+    vec2 fenc = enc*4;
+    float f = dot(fenc,fenc);
+    float g = sqrt(1-f/4);
+    return vec3(fenc*g, 1-f/2);
+
+}
+
 void main(void) {
     vec2 vTexCoord = gl_FragCoord.xy*invResolution;
 
@@ -30,18 +39,13 @@ void main(void) {
     //fragment light parameters
     vec3 fragmentPos = getFragPos(vTexCoord); //view space
     vec3 lightVector = normalize(lightPos - fragmentPos); //view space
-
-    //Decode normal
-    vec2 fenc = valColor1.xy*4;
-    float f = dot(fenc,fenc);
-    float  g = sqrt(1-f/4);
-    vec3 normalVector = vec3(fenc*g, 1-f/2);
+    vec3 normalVector = decodeNormal(valColor1.xy);  //view space
 
     //Blinn-Phong shading
     vec3 E = normalize(-fragmentPos);
     vec3 H = normalize(lightVector+E);
     float cosAlpha = clamp(dot(normalVector, H), 0.0f, 1.0f);
-    float cosTheta = max(dot(normalize(normalVector), normalize(lightVector)), 0.0f);
+    float cosTheta = max(dot(normalVector, lightVector), 0.0f);
     float attenuationFactor = max(0.0, 1-length(fragmentPos-lightPos)/lightRadius);
 
     color = vec4(matDiffuseColor*lightColor*cosTheta*attenuationFactor + //sun light (diffuse)

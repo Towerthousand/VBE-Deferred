@@ -3,6 +3,7 @@
 
 #include "Particle.hpp"
 
+class DeferredContainer;
 class ParticleSystem : public GameObject {
 	public:
 		ParticleSystem();
@@ -12,20 +13,12 @@ class ParticleSystem : public GameObject {
 		void addParticle(const Particle& p);
 		int getParticleCount() const { return particles.size(); }
 		void setTextureSheet(Texture* textureSheet, unsigned int textureCount);
-		void setProjectionMatrix(const mat4f& mat) {projectionMatrix = mat;}
-		void setViewMatrix(const mat4f& mat) {viewMatrix = mat;}
-
 	private:
-		static const std::string vertexShader;
-		static const std::string geometryShader;
-		static const std::string fragmentShader;
-
+		DeferredContainer* renderer;
 		std::list<Particle> particles;
 		Model model;
 		unsigned int textureCount;
 		Texture* textureSheet;
-		mat4f projectionMatrix;
-		mat4f viewMatrix;
 };
 
 #endif // PARTICLESYSTEM_HPP

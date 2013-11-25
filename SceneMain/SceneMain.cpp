@@ -3,6 +3,7 @@
 #include "DeferredContainer.hpp"
 #include "DeferredModel.hpp"
 #include "DeferredLight.hpp"
+#include "particles/LightParticleEmitter.hpp"
 
 SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	this->setName("SCENE");
@@ -27,10 +28,15 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	DeferredContainer* renderer = new DeferredContainer();
 	renderer->addTo(this);
 
-	DeferredModel* ball = new DeferredModel("ball", "lava");
+	ParticleSystem* system = new ParticleSystem();
+	system->addTo(renderer);
+	system->setTextureSheet(Textures.get("particleSheet"), 2);
+
+
+	DeferredModel* ball = new DeferredModel("bunny", "lava");
 	ball->addTo(renderer);
 	ball->pos.y = -1;
-	ball->scale = vec3f(3.0f);
+	ball->scale = vec3f(0.5f);
 
 	DeferredModel* box = new DeferredModel("box", "awesome");
 	box->addTo(renderer);
@@ -70,6 +76,9 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light1->setName("light1");
 	light1->color = vec3f(1, 0, 0);
 
+	ParticleEmitter* emitter1 = new LightParticleEmitter(vec3f(1.0, 0.1, 0.03));
+	emitter1->addTo(light1);
+
 	DeferredModel* ballLight1 = new DeferredModel("ball", "nullRed", 1.0, 0.0);
 	ballLight1->addTo(light1);
 	ballLight1->scale = vec3f(0.5f);
@@ -79,6 +88,9 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light2->addTo(renderer);
 	light2->setName("light2");
 	light2->color = vec3f(0, 1, 0);
+
+	ParticleEmitter* emitter2 = new LightParticleEmitter(vec3f(0.1, 1.0, 0.03));
+	emitter2->addTo(light2);
 
 	DeferredModel* ballLight2 = new DeferredModel("ball", "nullGreen", 1.0, 0.0);
 	ballLight2->addTo(light2);
@@ -90,6 +102,9 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light3->setName("light3");
 	light3->color = vec3f(0, 0, 1);
 
+	ParticleEmitter* emitter3 = new LightParticleEmitter(vec3f(0.03, 0.1, 1.0));
+	emitter3->addTo(light3);
+
 	DeferredModel* ballLight3 = new DeferredModel("ball", "nullBlue", 1.0, 0.0);
 	ballLight3->addTo(light3);
 	ballLight3->scale = vec3f(0.5f);
@@ -100,7 +115,10 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light4->setName("light4");
 	light4->color = vec3f(1, 1, 1);
 
-	DeferredModel* ballLight4 = new DeferredModel("ball", "nullWhite", 1.0, 0.0);
+	ParticleEmitter* emitter4 = new LightParticleEmitter(vec3f(0.5, 0.3, 0.6));
+	emitter4->addTo(light4);
+
+	DeferredModel* ballLight4 = new DeferredModel("ball", "nullBlack", 1.0, 0.0);
 	ballLight4->addTo(light4);
 	ballLight4->scale = vec3f(0.5f);
 	ballLight4->setName("ballLight4");
@@ -127,9 +145,12 @@ void SceneMain::loadResources() {
 	quad->setPrimitiveType(Mesh::TRIANGLES);
 	Meshes.add("quad", quad);
 	Meshes.add("ball", Mesh::loadFromFile("data/meshes/sphere.obj"));
-	Meshes.add("box", Mesh::loadFromFile("data/meshes/cube.obj"));
+	Meshes.add("box", Mesh::loadFromFile("data/meshes/cubeHi.obj"));
 	Meshes.add("monkey", Mesh::loadFromFile("data/meshes/monkey.obj"));
+	Meshes.add("bunny", Mesh::loadFromFile("data/meshes/bunny.obj"));
+
 	//textures
+	Textures.add("particleSheet", Texture::loadFromFile("data/textures/particleSheet.png"));
 	Textures.add("lava", Texture::loadFromFile("data/textures/lava.png"));
 	Textures.add("awesome", Texture::loadFromFile("data/textures/awesome.png"));
 	char pixels[4] = {char(200), char(20), char(20), char(255)};
@@ -138,8 +159,10 @@ void SceneMain::loadResources() {
 	Textures.add("nullGreen", Texture::loadFromRaw(pixels2, 1, 1));
 	char pixels3[4] = {char(20), char(20), char(200), char(255)};
 	Textures.add("nullBlue", Texture::loadFromRaw(pixels3, 1, 1));
-	char pixels4[4] = {char(255), char(255), char(255), char(255)};
-	Textures.add("nullWhite", Texture::loadFromRaw(pixels4, 1, 1));
+	char pixels4[4] = {char(70), char(30), char(80), char(255)};
+	Textures.add("nullBlack", Texture::loadFromRaw(pixels4, 1, 1));
+	char pixels5[4] = {char(255), char(255), char(255), char(255)};
+	Textures.add("nullWhite", Texture::loadFromRaw(pixels5, 1, 1));
 
 	//program
 	Programs.add("standardDeferred", ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert", "data/shaders/standardDeferred.frag"));
