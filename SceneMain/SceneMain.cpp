@@ -19,7 +19,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	glEnable(GL_CULL_FACE); //enable backface culling
 	glCullFace(GL_BACK);
 
-	getGame()->getWindow().setVerticalSyncEnabled(true);
+    getGame()->getWindow().setVerticalSyncEnabled(true);
 
 	//add player cam
 	PlayerCamera* pCam = new PlayerCamera("playerCam", vec3f(0, 10, 15), vec3f(45, 0, 0));
@@ -77,7 +77,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	light1->setName("light1");
 	light1->color = vec3f(1, 0, 0);
 
-	ParticleEmitter* emitter1 = new LightParticleEmitter(vec3f(1.0, 0.1, 0.03));
+    ParticleEmitter* emitter1 = new LightParticleEmitter(vec3f(1.0, 0.1, 0.03));
 	emitter1->addTo(light1);
 
 	DeferredModel* ballLight1 = new DeferredModel("ball", "nullRed", 1.0, 0.0);
@@ -174,7 +174,8 @@ void SceneMain::update(float deltaTime) {
 	++fpsCount;
 	debugCounter += deltaTime;
 	if (debugCounter > 1) {
-		VBE_LOG("FPS: " << fpsCount << ". Amount of GameObjects: " << getGame()->getObjectCount());
+        ParticleSystem* sys = (ParticleSystem*)getGame()->getObjectByName("particleSystem");
+        VBE_LOG("FPS: " << fpsCount << " GameObjects: " << getGame()->getObjectCount() << " Particles: " << sys->getParticleCount());
 		debugCounter--;
 		fpsCount = 0;
 	}
