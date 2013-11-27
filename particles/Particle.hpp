@@ -1,7 +1,7 @@
 #ifndef PARTICLE_HPP
 #define PARTICLE_HPP
 
-#include "VBE/includes.hpp"
+#include "commons.hpp"
 
 class Particle {
 	public:

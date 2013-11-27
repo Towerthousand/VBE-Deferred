@@ -1,6 +1,5 @@
 #include "LightParticleEmitter.hpp"
 #include "ParticleEmitter.hpp"
-#include "glm/gtc/random.hpp"
 
 LightParticleEmitter::LightParticleEmitter(vec3f col) : ParticleEmitter(1000), col(col) {
 }

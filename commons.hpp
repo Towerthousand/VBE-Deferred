@@ -2,8 +2,6 @@
 #define COMMONS_HPP
 
 #include "VBE/includes.hpp"
-#include "particles/Particle.hpp"
-#include "particles/ParticleSystem.hpp"
-#include "particles/ParticleEmitter.hpp"
+#include "glm/gtc/random.hpp"
 
 #endif // COMMONS_HPP

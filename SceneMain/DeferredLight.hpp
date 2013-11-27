@@ -12,6 +12,7 @@ class DeferredLight : public GameObject{
 		void draw() const;
         vec3f pos;
 		vec3f color;
+		vec3f vel;
         float radius;
 
 	protected:

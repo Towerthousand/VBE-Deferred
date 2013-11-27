@@ -8,9 +8,9 @@ uniform vec2 invResolution;
 out vec4 finalColor;
 
 void main(void) {
-    vec2 vTexCoord = gl_FragCoord.xy*invResolution;
+	vec2 vTexCoord = gl_FragCoord.xy * invResolution;
     vec4 valColor0 = texture(color0, vTexCoord);
     vec4 valColor1 = texture(color1, vTexCoord);
 
-    finalColor = vec4(valColor0.xyz *(0.05 +valColor1.z), 1.0);
+	finalColor = vec4(valColor0.xyz *(0.05 + valColor1.z), 1.0);
 }

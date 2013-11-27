@@ -54,17 +54,17 @@ void ParticleSystem::draw() const {
 		return;
 
 	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
-
-	glDepthMask(GL_FALSE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-	model.program->uniform("modelViewMatrix")->set(cam->view*fullTransform);
-	model.program->uniform("projectionMatrix")->set(cam->projection);
-	model.program->uniform("texSize")->set(1.0f/float(textureCount));
-	model.program->uniform("textureSheet")->set(textureSheet);
-	model.program->uniform("depth")->set(renderer->getDepth());
-	model.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
-	model.program->uniform("invProj")->set(glm::inverse(cam->projection));
-	model.draw();
+	if(!Input::isKeyDown(sf::Keyboard::P)) {
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		model.program->uniform("modelViewMatrix")->set(cam->view*fullTransform);
+		model.program->uniform("projectionMatrix")->set(cam->projection);
+		model.program->uniform("texSize")->set(1.0f/float(textureCount));
+		model.program->uniform("textureSheet")->set(textureSheet);
+		model.program->uniform("depth")->set(renderer->getDepth());
+		model.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
+		model.program->uniform("invProj")->set(glm::inverse(cam->projection));
+		model.draw();
+	}
 }
 
 void ParticleSystem::addParticle(const Particle& p) {

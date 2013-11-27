@@ -23,3 +23,8 @@ void Camera::update(float deltaTime) {
 vec3f Camera::getWorldPos() {
 	return vec3f(fullTransform*vec4f(pos,1.0));
 }
+
+vec3f Camera::getForward() {
+	mat4f m = view*fullTransform;
+	return -glm::normalize(vec3f(m[0][2],m[1][2],m[2][2]));
+}

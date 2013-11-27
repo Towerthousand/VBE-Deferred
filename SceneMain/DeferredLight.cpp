@@ -2,7 +2,7 @@
 #include "DeferredContainer.hpp"
 #include "Camera.hpp"
 
-DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), radius(20.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
+DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), vel(0.0f), radius(15.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
     quad.mesh = Meshes.get("quad");
 	quad.program = Programs.get("deferredLight");
 }
@@ -12,7 +12,11 @@ DeferredLight::~DeferredLight() {
 
 void DeferredLight::update(float deltaTime) {
     (void) deltaTime;
+	pos += vel*deltaTime;
 	transform = glm::translate(mat4f(1.0f), pos);
+	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
+	if(glm::length(cam->getWorldPos()-vec3f(fullTransform*vec4f(0,0,0,1.0))) > ZFAR)
+		removeAndDelete();
 }
 
 void DeferredLight::draw() const {

@@ -4,6 +4,7 @@
 #include "DeferredModel.hpp"
 #include "DeferredLight.hpp"
 #include "particles/LightParticleEmitter.hpp"
+#include "particles/ParticleSystem.hpp"
 
 SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	this->setName("SCENE");
@@ -83,7 +84,6 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	DeferredModel* ballLight1 = new DeferredModel("ball", "nullRed", 1.0, 0.0);
 	ballLight1->addTo(light1);
 	ballLight1->scale = vec3f(0.5f);
-	ballLight1->setName("ballLight1");
 
 	DeferredLight* light2 = new DeferredLight();
 	light2->addTo(renderer);
@@ -96,7 +96,6 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	DeferredModel* ballLight2 = new DeferredModel("ball", "nullGreen", 1.0, 0.0);
 	ballLight2->addTo(light2);
 	ballLight2->scale = vec3f(0.5f);
-	ballLight2->setName("ballLight2");
 
 	DeferredLight* light3 = new DeferredLight();
 	light3->addTo(renderer);
@@ -109,7 +108,6 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	DeferredModel* ballLight3 = new DeferredModel("ball", "nullBlue", 1.0, 0.0);
 	ballLight3->addTo(light3);
 	ballLight3->scale = vec3f(0.5f);
-	ballLight3->setName("ballLight3");
 
 	DeferredLight* light4 = new DeferredLight();
 	light4->addTo(renderer);
@@ -122,7 +120,6 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	DeferredModel* ballLight4 = new DeferredModel("ball", "nullBlack", 1.0, 0.0);
 	ballLight4->addTo(light4);
 	ballLight4->scale = vec3f(0.5f);
-	ballLight4->setName("ballLight4");
 }
 
 SceneMain::~SceneMain() {
@@ -185,7 +182,6 @@ void SceneMain::update(float deltaTime) {
 	}
 	if(!Input::isKeyDown(sf::Keyboard::Space)) {
 		float circleWidth = 5+3*sin(GLOBALCLOCK.getElapsedTime().asSeconds());
-
 		DeferredLight* light1 = (DeferredLight*)getGame()->getObjectByName("light1");
 		light1->pos = vec3f(circleWidth*sin(5*GLOBALCLOCK.getElapsedTime().asSeconds()), 2, circleWidth*cos(5*GLOBALCLOCK.getElapsedTime().asSeconds()));
 		DeferredLight* light2 = (DeferredLight*)getGame()->getObjectByName("light2");
@@ -194,5 +190,23 @@ void SceneMain::update(float deltaTime) {
 		light3->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)), 2, circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)));
 		DeferredLight* light4 = (DeferredLight*)getGame()->getObjectByName("light4");
 		light4->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)), 2, circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)));
+	}
+	if(Input::isMousePressed(sf::Mouse::Left)) {
+		Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
+		DeferredContainer* renderer = (DeferredContainer*)getGame()->getObjectByName("deferred");
+		vec3f color = glm::abs(glm::sphericalRand(1.0f));
+		DeferredLight* l = new DeferredLight();
+		l->addTo(renderer);
+		l->vel = cam->getForward()*10.0f;
+		l->pos = cam->pos;
+		l->color = color;
+		l->radius = 20;
+
+		ParticleEmitter* e = new LightParticleEmitter(color);
+		e->addTo(l);
+
+		DeferredModel* m = new DeferredModel("ball", "nullWhite", 1.0, 0.0);
+		m->addTo(l);
+		m->scale = vec3f(0.5f);
 	}
 }
