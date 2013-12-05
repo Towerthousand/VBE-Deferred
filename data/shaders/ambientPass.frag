@@ -2,6 +2,7 @@
 
 uniform sampler2D color0;
 uniform sampler2D color1;
+uniform mat4 depthMVP;
 
 uniform vec2 invResolution;
 

@@ -18,7 +18,8 @@ class DeferredModel : public GameObject{
 		float ambient, specular;
 
 	protected:
-		virtual void drawDeferredModel() const;
+		virtual void drawDeferred() const;
+		virtual void drawShadow() const;
 
 	private:
 		DeferredContainer* renderer;

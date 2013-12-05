@@ -25,20 +25,31 @@ void DeferredModel::update(float deltaTime) {
 void DeferredModel::draw() const {
 	switch(renderer->getMode()) {
 		case DeferredContainer::Deferred:
-			drawDeferredModel();
+			drawDeferred();
+			break;
+		case DeferredContainer::Shadow:
+			drawShadow();
 			break;
 		default:
 			break;
 	}
 }
 
-void DeferredModel::drawDeferredModel() const {
+void DeferredModel::drawDeferred() const {
 	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
+	model.program = Programs.get("deferredModel");
 	model.program->uniform("MVP")->set(cam->projection*cam->view*fullTransform);
 	model.program->uniform("M")->set(fullTransform);
 	model.program->uniform("V")->set(cam->view);
 	model.program->uniform("ambient")->set(ambient);
 	model.program->uniform("specular")->set(specular);
 	model.program->uniform("diffuseTex")->set(Textures.get(tex));
+	model.draw();
+}
+
+void DeferredModel::drawShadow() const {
+	Camera* sCam = (Camera*)getGame()->getObjectByName("sunCam");
+	model.program = Programs.get("depthShader");
+	model.program->uniform("MVP")->set(sCam->projection*sCam->view*fullTransform);
 	model.draw();
 }

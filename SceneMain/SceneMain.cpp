@@ -27,6 +27,11 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	pCam->projection = glm::perspective(FOV, float(SCRWIDTH)/float(SCRHEIGHT), ZNEAR, ZFAR);
 	pCam->addTo(this);
 
+	//add sun cam
+	Camera* sCam = new Camera("sunCam",vec3f(-10,10,10),vec3f(45,45,0));
+	sCam->projection = glm::ortho<float>(-25,25,-25,25,-10, 50);
+	sCam->addTo(this);
+
 	//add deferred renderer
 	DeferredContainer* renderer = new DeferredContainer();
 	renderer->addTo(this);
@@ -169,6 +174,7 @@ void SceneMain::loadResources() {
 	Programs.add("blurPassHoritzontal", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/blurPassHoritzontal.frag"));
 	Programs.add("textureToScreen", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/quad.frag"));
 	Programs.add("blurMaskPass", ShaderProgram::loadFromFile("data/shaders/quad.vert", "data/shaders/blurMaskPass.frag"));
+	Programs.add("depthShader", ShaderProgram::loadFromFile("data/shaders/depth.vert","data/shaders/depth.frag"));
 }
 
 void SceneMain::update(float deltaTime) {

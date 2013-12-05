@@ -39,5 +39,7 @@ OTHER_FILES += \
     data/shaders/blurPassVertical.frag \
     data/shaders/blurPassHoritzontal.frag \
     data/shaders/quad.frag \
-    data/shaders/blurMaskPass.frag
+    data/shaders/blurMaskPass.frag \
+    data/shaders/depth.frag \
+    data/shaders/depth.vert
 

@@ -30,7 +30,7 @@ void DeferredLight::draw() const {
 }
 
 void DeferredLight::drawDeferredLight() const{
-    Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
+	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 	vec3f posWorldSpace = vec3f(fullTransform*vec4f(0,0,0,1));
 	vec3f posViewSpace = vec3f(cam->view*vec4f(posWorldSpace,1.0));
 

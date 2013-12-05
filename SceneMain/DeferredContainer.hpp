@@ -7,6 +7,7 @@ class DeferredContainer : public ContainerObject {
 
         enum DrawMode {
 			Deferred = 0,
+			Shadow,
 			Light
 		};
 
@@ -26,6 +27,7 @@ class DeferredContainer : public ContainerObject {
 		RenderTarget* blurMask;
 		RenderTarget* horitzontalBlurred;
 		RenderTarget* blurred;
+		RenderTarget* shadowMap;
         mutable DrawMode drawMode;
 		mutable Model quad;
 };
