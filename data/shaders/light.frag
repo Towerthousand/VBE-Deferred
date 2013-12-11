@@ -51,5 +51,5 @@ void main(void) {
 	float attenuationFactor = max(0.0, 1 - length(fragmentPos-lightPos) / lightRadius);
 
 	color = vec4(matDiffuseColor * lightColor * cosTheta * attenuationFactor +
-				 matSpecularColor * lightColor * pow(cosAlpha, 100) * cosTheta * attenuationFactor, 1.0f);
+                                 matSpecularColor * lightColor * pow(cosAlpha, 5000) * cosTheta * attenuationFactor, 1.0f);
 }

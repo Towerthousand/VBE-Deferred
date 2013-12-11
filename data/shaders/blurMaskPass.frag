@@ -8,11 +8,11 @@ uniform vec2 invResolution;
 out vec4 finalColor;
 
 void main(void) {
-	vec2 vTexCoord = gl_FragCoord.xy * invResolution;
-    vec4 valColor0 = texture(color0, vTexCoord);
-    vec4 valColor1 = texture(color1, vTexCoord);
-	float threshold = 0.8;
-	if(valColor1.z > 0 || valColor0.x > threshold || valColor0.y > threshold || valColor0.z > threshold)
+    vec2 vTexCoord = gl_FragCoord.xy * invResolution;
+    vec4 valColor0 = texture(color0, vTexCoord); //xyz = color
+    vec4 valColor1 = texture(color1, vTexCoord); //z = luminosity
+    float threshold = 0.8;
+    if(valColor1.z > 0 || valColor0.x > threshold || valColor0.y > threshold || valColor0.z > threshold)
         finalColor = vec4(valColor0.xyz, 1.0);
     else
         finalColor = vec4(vec3(0.0),1);

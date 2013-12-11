@@ -15,7 +15,7 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzonta
 	shadowMap->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32);
 	shadowMap->build();
 	shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setFilter(GL_LINEAR,GL_LINEAR);
-	shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setComparison(GL_LESS);
+    //shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setComparison(GL_LESS);
 
 	noBlur = new RenderTarget(SCRWIDTH, SCRHEIGHT);
 	noBlur->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
@@ -101,44 +101,44 @@ void DeferredContainer::draw() const {
 	//	quad.program->uniform("depthMVP")->set(biasMatrix*(sCam->projection*sCam->view*fullTransform));
 	quad.draw();
 
-	//BLUR MASK BUILDING
-	RenderTarget::bind(blurMask);
-	glClear(GL_COLOR_BUFFER_BIT);
-	quad.program = Programs.get("blurMaskPass");
-	quad.program->uniform("MVP")->set(mat4f(1.0f));
-	quad.program->uniform("color0")->set(noBlur->getTextureForAttachment(RenderTarget::COLOR0));
-	quad.program->uniform("color1")->set(getColor1());
-	quad.program->uniform("invResolution")->set(vec2f(1.0f/blurMask->getWidth(), 1.0f/blurMask->getHeight()));
-	quad.draw();
+    //BLUR MASK BUILDING
+    RenderTarget::bind(blurMask);
+    glClear(GL_COLOR_BUFFER_BIT);
+    quad.program = Programs.get("blurMaskPass");
+    quad.program->uniform("MVP")->set(mat4f(1.0f));
+    quad.program->uniform("color0")->set(noBlur->getTextureForAttachment(RenderTarget::COLOR0));
+    quad.program->uniform("color1")->set(getColor1());
+    quad.program->uniform("invResolution")->set(vec2f(1.0f/blurMask->getWidth(), 1.0f/blurMask->getHeight()));
+    quad.draw();
 
-	//BLUR
-	RenderTarget::bind(horitzontalBlurred);
-	glClear(GL_COLOR_BUFFER_BIT);
-	if(!Input::isKeyDown(sf::Keyboard::B)) {
-		quad.program = Programs.get("blurPassHoritzontal");
-		quad.program->uniform("MVP")->set(mat4f(1.0f));
-		quad.program->uniform("RTScene")->set(blurMask->getTextureForAttachment(RenderTarget::COLOR0));
-		quad.program->uniform("invResolution")->set(vec2f(1.0f/horitzontalBlurred->getWidth(), 1.0f/horitzontalBlurred->getHeight()));
-		quad.draw();
-	}
+    //BLUR
+    RenderTarget::bind(horitzontalBlurred);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if(!Input::isKeyDown(sf::Keyboard::B)) {
+        quad.program = Programs.get("blurPassHoritzontal");
+        quad.program->uniform("MVP")->set(mat4f(1.0f));
+        quad.program->uniform("RTScene")->set(blurMask->getTextureForAttachment(RenderTarget::COLOR0));
+        quad.program->uniform("invResolution")->set(vec2f(1.0f/horitzontalBlurred->getWidth(), 1.0f/horitzontalBlurred->getHeight()));
+        quad.draw();
+    }
 
-	RenderTarget::bind(blurred);
-	glClear(GL_COLOR_BUFFER_BIT);
-	if(!Input::isKeyDown(sf::Keyboard::B)) {
-		quad.program = Programs.get("blurPassVertical");
-		quad.program->uniform("MVP")->set(mat4f(1.0f));
-		quad.program->uniform("RTBlurH")->set(horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0));
-		quad.program->uniform("invResolution")->set(vec2f(1.0f/blurred->getWidth(), 1.0f/blurred->getHeight()));
-		quad.draw();
-	}
+    RenderTarget::bind(blurred);
+    glClear(GL_COLOR_BUFFER_BIT);
+    if(!Input::isKeyDown(sf::Keyboard::B)) {
+        quad.program = Programs.get("blurPassVertical");
+        quad.program->uniform("MVP")->set(mat4f(1.0f));
+        quad.program->uniform("RTBlurH")->set(horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0));
+        quad.program->uniform("invResolution")->set(vec2f(1.0f/blurred->getWidth(), 1.0f/blurred->getHeight()));
+        quad.draw();
+    }
 
 	//BLUR + SCENE
 	RenderTarget::bind(nullptr);
 	glClear(GL_COLOR_BUFFER_BIT);
 	quad.program = Programs.get("textureToScreen");
-	quad.program->uniform("MVP")->set(mat4f(1.0f));
-	quad.program->uniform("tex1")->set(shadowMap->getTextureForAttachment(RenderTarget::DEPTH));
-	quad.program->uniform("tex2")->set(shadowMap->getTextureForAttachment(RenderTarget::DEPTH));
+    quad.program->uniform("MVP")->set(mat4f(1.0f));
+    quad.program->uniform("tex1")->set(noBlur->getTextureForAttachment(RenderTarget::COLOR0));
+    quad.program->uniform("tex2")->set(blurred->getTextureForAttachment(RenderTarget::COLOR0));
 	quad.program->uniform("invResolution")->set(vec2f(1.0f/(SCRWIDTH), 1.0f/(SCRHEIGHT)));
 	quad.draw();
 

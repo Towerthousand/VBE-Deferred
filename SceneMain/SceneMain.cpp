@@ -40,7 +40,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	system->addTo(renderer);
 	system->setTextureSheet(Textures.get("particleSheet"), 2);
 
-	DeferredModel* ball = new DeferredModel("ball", "lava");
+    DeferredModel* ball = new DeferredModel("ball", "lava",1.0,0.0);
 	ball->addTo(renderer);
 	ball->pos.y = -1;
 	ball->scale = vec3f(3.0f);
@@ -71,7 +71,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	monkeyBlue->rot.x = 45;
 	monkeyBlue->rot.y = 90;
 
-	DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite");
+    DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite",0.0,100.0);
 	monkeyWhite->addTo(renderer);
 	monkeyWhite->scale = vec3f(7.0f);
 	monkeyWhite->pos = vec3f(10, 8, 0);

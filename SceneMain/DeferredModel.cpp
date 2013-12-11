@@ -48,7 +48,7 @@ void DeferredModel::drawDeferred() const {
 }
 
 void DeferredModel::drawShadow() const {
-	Camera* sCam = (Camera*)getGame()->getObjectByName("sunCam");
+    Camera* sCam = (Camera*)getGame()->getObjectByName("sunCam");
 	model.program = Programs.get("depthShader");
 	model.program->uniform("MVP")->set(sCam->projection*sCam->view*fullTransform);
 	model.draw();
