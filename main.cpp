@@ -1,7 +1,7 @@
 #include "SceneMain/SceneMain.hpp"
 
 int main() {
-    WINDOW_TITLE = "Deferred Test";
+	WINDOW_TITLE = "Deferred Test";
 	Game* game = new Game();
     SceneMain* sc = new SceneMain();
 	sc->addTo(game);

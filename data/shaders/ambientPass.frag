@@ -5,9 +5,11 @@ uniform sampler2D color1;
 uniform sampler2DShadow sunDepth;
 uniform sampler2D depth;
 uniform mat4 depthMVP;
-uniform mat4 invProj;
-uniform mat4 invView;
+uniform mat4 invCamProj;
+uniform mat4 invCamView;
+uniform mat4 camMV;
 uniform vec2 invResolution;
+uniform vec3 lightDir;
 
 out vec4 finalColor;
 
@@ -32,8 +34,8 @@ vec2 poissonDisk[16] = {
 
 vec3 getFragPos(vec2 texCoord) {
         vec4 sPos = vec4(texCoord * 2 - 1, texture(depth, texCoord).x * 2 - 1, 1.0);
-        sPos = invProj * sPos;
-        return sPos.xyz / sPos.w;
+		sPos = invCamProj * sPos;
+		return sPos.xyz / sPos.w;
 }
 
 vec3 decodeNormal(vec2 enc) {
@@ -45,20 +47,27 @@ vec3 decodeNormal(vec2 enc) {
 }
 
 void main(void) {
-    vec2 vTexCoord = gl_FragCoord.xy * invResolution;
-    vec3 fragmentViewPos = getFragPos(vTexCoord); //view space
-    vec3 fragmentWorldPos = vec4(invView*vec4(fragmentViewPos,1.0)).xyz; //world space
-    vec4 shadowCoord = vec4(depthMVP*vec4(fragmentWorldPos,1.0));
+	vec2 vTexCoord = gl_FragCoord.xy * invResolution;
 
-    vec4 valColor0 = texture(color0, vTexCoord);
-    vec4 valColor1 = texture(color1, vTexCoord);
+	vec4 valColor0 = texture(color0, vTexCoord);
+	vec4 valColor1 = texture(color1, vTexCoord);
+
+    vec3 fragmentViewPos = getFragPos(vTexCoord); //view space
+	vec3 fragmentWorldPos = vec4(invCamView*vec4(fragmentViewPos,1.0)).xyz; //world space
+	vec4 shadowCoord = vec4(depthMVP*vec4(fragmentWorldPos,1.0)); //texture space (for shadow tex)
+
+	vec3 normalVector = normalize(decodeNormal(valColor1.xy));  //view space
+	vec3 lightVector = normalize(vec4(camMV*vec4(lightDir,0.0)).xyz);
+
+	float cosTheta = max(dot(normalVector, lightVector), 0.0f);
 
     // Sample the shadow map 16 times, 4 texture() calls * 4 samples each call
-    float visibility = 1.0;
-    float bias = 0.005;
-    int sampleNum = 16;
+	float visibility = 1.0;
+	float bias = 0.005*tan(acos(cosTheta));
+	bias = clamp(bias, 0.0f,0.01f);
+	float sampleNum = 16;
     for (int i=0;i<sampleNum;i++)
-            visibility -= (1.0f/sampleNum)*(1.0-texture(sunDepth,vec3(shadowCoord.xy + poissonDisk[i]/700.0,(shadowCoord.z-bias)/shadowCoord.w)));
+			visibility -= (1.0f/sampleNum)*(1.0-texture(sunDepth,vec3(shadowCoord.xy + poissonDisk[i]/700.0,(shadowCoord.z-bias)/shadowCoord.w)));
 
-    finalColor = vec4(vec3(valColor0.xyz*(0.05 + valColor1.z+ visibility)), 1.0);
+	finalColor = vec4(vec3(valColor0.xyz*(0.05 + valColor1.z + 0.5*visibility)), 1.0);
 }

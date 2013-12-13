@@ -7,12 +7,12 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzonta
     gBuffer->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32); //Z-BUFFER
     gBuffer->addTexture(RenderTarget::COLOR0, Texture::RGB8); //COLOR
     gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMAL, BRIGHTNESS, SPECULAR FACTOR
-    gBuffer->build();
+	gBuffer->build();
     gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
     gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST, GL_NEAREST);
 
-    shadowMap = new RenderTarget(SCRWIDTH, SCRHEIGHT);
-    shadowMap->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32);
+	shadowMap = new RenderTarget(SCRWIDTH, SCRHEIGHT);
+	shadowMap->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32);
     shadowMap->build();
     shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setFilter(GL_LINEAR,GL_LINEAR);
     shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setComparison(GL_LESS);
@@ -90,11 +90,13 @@ void DeferredContainer::draw() const {
     Camera* sCam = (Camera*)getGame()->getObjectByName("sunCam");
     quad.program = Programs.get("ambientPass");
     quad.program->uniform("MVP")->set(mat4f(1.0f));
+	quad.program->uniform("camMV")->set(cam->view*fullTransform);
     quad.program->uniform("color0")->set(getColor0());
     quad.program->uniform("color1")->set(getColor1());
     quad.program->uniform("invResolution")->set(vec2f(1.0f/noBlur->getWidth(), 1.0f/noBlur->getHeight()));
-    quad.program->uniform("invProj")->set(glm::inverse(cam->projection));
-    quad.program->uniform("invView")->set(glm::inverse(cam->view));
+	quad.program->uniform("invCamProj")->set(glm::inverse(cam->projection));
+	quad.program->uniform("invCamView")->set(glm::inverse(cam->view));
+	quad.program->uniform("lightDir")->set(sCam->getForward());
     glm::mat4 biasMatrix( //gets coords from [-1..1] to [0..1]
                           0.5, 0.0, 0.0, 0.0,
                           0.0, 0.5, 0.0, 0.0,
