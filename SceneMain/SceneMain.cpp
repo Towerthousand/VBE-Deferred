@@ -20,7 +20,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	glEnable(GL_CULL_FACE); //enable backface culling
 	glCullFace(GL_BACK);
 
-	//getGame()->getWindow().setVerticalSyncEnabled(true);
+    getGame()->getWindow().setVerticalSyncEnabled(true);
 
 	//add player cam
 	PlayerCamera* pCam = new PlayerCamera("playerCam", vec3f(0, 10, 15), vec3f(45, 0, 0));
@@ -40,7 +40,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	system->addTo(renderer);
 	system->setTextureSheet(Textures.get("particleSheet"), 2);
 
-    DeferredModel* ball = new DeferredModel("ball", "lava",1.0,0.0);
+    DeferredModel* ball = new DeferredModel("ball", "lava");
 	ball->addTo(renderer);
 	ball->pos.y = -1;
 	ball->scale = vec3f(3.0f);
@@ -71,7 +71,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	monkeyBlue->rot.x = 45;
 	monkeyBlue->rot.y = 90;
 
-    DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite",0.0,100.0);
+    DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite");
 	monkeyWhite->addTo(renderer);
 	monkeyWhite->scale = vec3f(7.0f);
 	monkeyWhite->pos = vec3f(10, 8, 0);

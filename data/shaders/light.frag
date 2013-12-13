@@ -27,10 +27,10 @@ vec3 decodeNormal(vec2 enc) {
 }
 
 void main(void) {
-	vec2 vTexCoord = gl_FragCoord.xy * invResolution;
-	vec3 fragmentPos = getFragPos(vTexCoord); //view space
-	if(length(fragmentPos - lightPos) > lightRadius)
-		discard;
+        vec2 vTexCoord = gl_FragCoord.xy * invResolution;
+        vec3 fragmentPos = getFragPos(vTexCoord); //view space
+        if(length(fragmentPos - lightPos) > lightRadius)
+                discard;
 
     vec4 valColor0 = texture(color0, vTexCoord);
     vec4 valColor1 = texture(color1, vTexCoord);
@@ -51,5 +51,5 @@ void main(void) {
 	float attenuationFactor = max(0.0, 1 - length(fragmentPos-lightPos) / lightRadius);
 
 	color = vec4(matDiffuseColor * lightColor * cosTheta * attenuationFactor +
-                                 matSpecularColor * lightColor * pow(cosAlpha, 5000) * cosTheta * attenuationFactor, 1.0f);
+                                 matSpecularColor * lightColor * pow(cosAlpha, 1000) * cosTheta * attenuationFactor, 1.0f);
 }
