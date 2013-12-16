@@ -48,7 +48,7 @@ void main(void) {
 	vec3 H = normalize(lightVector + E);
     float cosAlpha = clamp(dot(normalVector, H), 0.0f, 1.0f);
     float cosTheta = max(dot(normalVector, lightVector), 0.0f);
-	float attenuationFactor = max(0.0, 1 - length(fragmentPos-lightPos) / lightRadius);
+        float attenuationFactor = max(0.0, 1 - length(fragmentPos-lightPos) / lightRadius);
 
 	color = vec4(matDiffuseColor * lightColor * cosTheta * attenuationFactor +
                                  matSpecularColor * lightColor * pow(cosAlpha, 1000) * cosTheta * attenuationFactor, 1.0f);

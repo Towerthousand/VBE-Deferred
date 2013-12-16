@@ -47,36 +47,32 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 
 	DeferredModel* box = new DeferredModel("box", "awesome");
 	box->addTo(renderer);
-	box->rot.x = 180;
-	box->pos.y = -10;
+    box->pos.y = -10;
 	box->scale = vec3f(10.0f);
 
 	DeferredModel* monkeyRed = new DeferredModel("monkey", "nullRed");
+    monkeyRed->setName("monkeyRed");
 	monkeyRed->addTo(renderer);
-	monkeyRed->scale = vec3f(7.0f);
-	monkeyRed->pos = vec3f(0.0f, 8, -10);
-	monkeyRed->rot.x = 45;
+    monkeyRed->scale = vec3f(5.0f);
+    monkeyRed->lookAt = vec3f(0);
 
 	DeferredModel* monkeyGreen = new DeferredModel("monkey", "nullGreen");
+    monkeyGreen->setName("monkeyGreen");
 	monkeyGreen->addTo(renderer);
-	monkeyGreen->scale = vec3f(7.0f);
-	monkeyGreen->pos = vec3f(0.0f, 8, 10);
-	monkeyGreen->rot.x = 45;
-	monkeyGreen->rot.y = 180;
+    monkeyGreen->lookAt = vec3f(0);
+    monkeyGreen->scale = vec3f(5.0f);
 
 	DeferredModel* monkeyBlue = new DeferredModel("monkey", "nullBlue");
+    monkeyBlue->setName("monkeyBlue");
 	monkeyBlue->addTo(renderer);
-	monkeyBlue->scale = vec3f(7.0f);
-	monkeyBlue->pos = vec3f(-10, 8, 0);
-	monkeyBlue->rot.x = 45;
-	monkeyBlue->rot.y = 90;
+    monkeyBlue->lookAt = vec3f(0);
+    monkeyBlue->scale = vec3f(5.0f);
 
     DeferredModel* monkeyWhite = new DeferredModel("monkey", "nullWhite");
+    monkeyWhite->setName("monkeyWhite");
 	monkeyWhite->addTo(renderer);
-	monkeyWhite->scale = vec3f(7.0f);
-	monkeyWhite->pos = vec3f(10, 8, 0);
-	monkeyWhite->rot.x = 45;
-	monkeyWhite->rot.y = -90;
+    monkeyWhite->lookAt = vec3f(0);
+    monkeyWhite->scale = vec3f(5.0f);
 
 	DeferredLight* light1 = new DeferredLight();
 	light1->addTo(renderer);
@@ -197,6 +193,18 @@ void SceneMain::update(float deltaTime) {
 		DeferredLight* light4 = (DeferredLight*)getGame()->getObjectByName("light4");
 		light4->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)), 2, circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)));
 	}
+    if(!Input::isKeyDown(sf::Keyboard::Space)) {
+        float circleWidth = 10;
+        int speed = 1;
+        DeferredModel* model1 = (DeferredModel*)getGame()->getObjectByName("monkeyRed");
+        model1->pos = vec3f(circleWidth*sin(speed*GLOBALCLOCK.getElapsedTime().asSeconds()), 8, circleWidth*cos(speed*GLOBALCLOCK.getElapsedTime().asSeconds()));
+        DeferredModel* model2 = (DeferredModel*)getGame()->getObjectByName("monkeyGreen");
+        model2->pos = vec3f(circleWidth*sin(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)), 8, circleWidth*cos(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)));
+        DeferredModel* model3 = (DeferredModel*)getGame()->getObjectByName("monkeyBlue");
+        model3->pos = vec3f(circleWidth*sin(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)), 8, circleWidth*cos(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)));
+        DeferredModel* model4 = (DeferredModel*)getGame()->getObjectByName("monkeyWhite");
+        model4->pos = vec3f(circleWidth*sin(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)), 8, circleWidth*cos(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)));
+    }
 	if(Input::isMousePressed(sf::Mouse::Left)) {
 		Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 		DeferredContainer* renderer = (DeferredContainer*)getGame()->getObjectByName("deferred");

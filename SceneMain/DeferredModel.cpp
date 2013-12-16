@@ -3,7 +3,7 @@
 #include "Camera.hpp"
 
 DeferredModel::DeferredModel(const std::string& meshID, const std::string& texID, float ambient, float specular) :
-	pos(0.0f), rot(0.0f), scale(1.0f), ambient(ambient), specular(specular),
+    pos(0.0f), scale(1.0f), ambient(ambient), specular(specular), lookAt(0),
 	renderer((DeferredContainer*)getGame()->getObjectByName("deferred")), tex(texID) {
 	model.mesh = Meshes.get(meshID);
 	model.program = Programs.get("deferredModel");
@@ -13,13 +13,16 @@ DeferredModel::~DeferredModel() {
 }
 
 void DeferredModel::update(float deltaTime) {
-	(void) deltaTime;
-	transform = mat4f(1.0f);
-	transform = glm::translate(transform, pos);
-	transform = glm::rotate(transform, rot.z, vec3f(0, 0, 1));
-	transform = glm::rotate(transform, rot.y, vec3f(0, 1, 0));
-	transform = glm::rotate(transform, rot.x, vec3f(1, 0, 0));
-	transform = glm::scale(transform, scale);
+    (void) deltaTime;
+    transform = glm::translate(mat4f(1.0f),pos);
+    if(glm::length(lookAt-pos) > 0.01 && glm::abs(glm::dot(vec3f(0,1,0),glm::normalize(lookAt-pos))) < 0.999) {
+        transform = glm::translate(mat4f(1.0f),pos);
+        transform *=glm::lookAt(lookAt,-pos,vec3f(0,1,0));
+    }
+    else {
+        transform = glm::translate(mat4f(1.0f),pos);
+    }
+    transform = glm::scale(transform, scale);
 }
 
 void DeferredModel::draw() const {
