@@ -148,19 +148,19 @@ void SceneMain::loadResources() {
 	Meshes.add("monkey", Mesh::loadFromFile("data/meshes/monkey.obj"));
 
 	//textures
-	Textures.add("particleSheet", Texture::loadFromFile("data/textures/particleSheet.png"));
-	Textures.add("lava", Texture::loadFromFile("data/textures/lava.png"));
-	Textures.add("awesome", Texture::loadFromFile("data/textures/awesome.png"));
+	Textures.add("particleSheet", Texture::createFromFile("data/textures/particleSheet.png"));
+	Textures.add("lava", Texture::createFromFile("data/textures/lava.png"));
+	Textures.add("awesome", Texture::createFromFile("data/textures/awesome.png"));
 	char pixels[4] = {char(200), char(20), char(20), char(255)};
-	Textures.add("nullRed", Texture::loadFromRaw(pixels, 1, 1));
+	Textures.add("nullRed", Texture::createFromRaw(pixels, 1, 1));
 	char pixels2[4] = {char(20), char(200), char(20), char(255)};
-	Textures.add("nullGreen", Texture::loadFromRaw(pixels2, 1, 1));
+	Textures.add("nullGreen", Texture::createFromRaw(pixels2, 1, 1));
 	char pixels3[4] = {char(20), char(20), char(200), char(255)};
-	Textures.add("nullBlue", Texture::loadFromRaw(pixels3, 1, 1));
+	Textures.add("nullBlue", Texture::createFromRaw(pixels3, 1, 1));
 	char pixels4[4] = {char(70), char(30), char(80), char(255)};
-	Textures.add("nullBlack", Texture::loadFromRaw(pixels4, 1, 1));
+	Textures.add("nullBlack", Texture::createFromRaw(pixels4, 1, 1));
 	char pixels5[4] = {char(255), char(255), char(255), char(255)};
-	Textures.add("nullWhite", Texture::loadFromRaw(pixels5, 1, 1));
+	Textures.add("nullWhite", Texture::createFromRaw(pixels5, 1, 1));
 
 	//program
 	Programs.add("deferredModel", ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert", "data/shaders/standardDeferred.frag"));
@@ -178,7 +178,7 @@ void SceneMain::update(float deltaTime) {
 	debugCounter += deltaTime;
 	if (debugCounter > 1) {
         ParticleSystem* sys = (ParticleSystem*)getGame()->getObjectByName("particleSystem");
-        VBE_LOG("FPS: " << fpsCount << " GameObjects: " << getGame()->getObjectCount() << " Particles: " << sys->getParticleCount());
+		VBE_LOG("FPS: " << fpsCount << " Particles: " << sys->getParticleCount());
 		debugCounter--;
 		fpsCount = 0;
 	}

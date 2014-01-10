@@ -3,7 +3,7 @@
 
 DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzontalBlurred(NULL), shadowMap(NULL), drawMode(Deferred) {
     setName("deferred");
-    gBuffer = new RenderTarget(SCRWIDTH, SCRHEIGHT);
+	gBuffer = new RenderTarget();
     gBuffer->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32); //Z-BUFFER
     gBuffer->addTexture(RenderTarget::COLOR0, Texture::RGB8); //COLOR
     gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMAL, BRIGHTNESS, SPECULAR FACTOR
@@ -11,13 +11,13 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzonta
     gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
     gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST, GL_NEAREST);
 
-	shadowMap = new RenderTarget(SCRWIDTH, SCRHEIGHT);
+	shadowMap = new RenderTarget();
 	shadowMap->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32);
     shadowMap->build();
     shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setFilter(GL_LINEAR,GL_LINEAR);
     shadowMap->getTextureForAttachment(RenderTarget::DEPTH)->setComparison(GL_LESS);
 
-    noBlur = new RenderTarget(SCRWIDTH, SCRHEIGHT);
+	noBlur = new RenderTarget();
     noBlur->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
     noBlur->build();
     noBlur->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
@@ -25,19 +25,19 @@ DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzonta
     float blurSize = 3;
     float blurSizeDivisor = std::pow(2,blurSize);
 
-    blurMask = new RenderTarget(SCRWIDTH, SCRHEIGHT);
+	blurMask = new RenderTarget();
     blurMask->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
     blurMask->build();
     blurMask->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
     blurMask->getTextureForAttachment(RenderTarget::COLOR0)->setWrap(GL_CLAMP_TO_EDGE);
 
-    horitzontalBlurred = new RenderTarget(SCRWIDTH/blurSizeDivisor, SCRHEIGHT/blurSizeDivisor);
+	horitzontalBlurred = new RenderTarget(1.0f/blurSizeDivisor);
     horitzontalBlurred->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
     horitzontalBlurred->build();
     horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
     horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0)->setWrap(GL_CLAMP_TO_EDGE);
 
-    blurred = new RenderTarget(SCRWIDTH/blurSizeDivisor, SCRHEIGHT/blurSizeDivisor);
+	blurred = new RenderTarget(1.0f/blurSizeDivisor);
     blurred->addTexture(RenderTarget::COLOR0, Texture::RGBA8);
     blurred->build();
     blurred->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_LINEAR, GL_LINEAR);
