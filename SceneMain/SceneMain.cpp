@@ -38,7 +38,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 
 	ParticleSystem* system = new ParticleSystem();
 	system->addTo(renderer);
-	system->setTextureSheet(Textures.get("particleSheet"), 2);
+	system->setTextureSheet(Textures2D.get("particleSheet"), 2);
 
     DeferredModel* ball = new DeferredModel("ball", "lava");
 	ball->addTo(renderer);
@@ -124,7 +124,7 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 }
 
 SceneMain::~SceneMain() {
-	Textures.clear();
+	Textures2D.clear();
 	Meshes.clear();
 	Programs.clear();
 	AudioManager::clear();
@@ -148,19 +148,19 @@ void SceneMain::loadResources() {
 	Meshes.add("monkey", Mesh::loadFromFile("data/meshes/monkey.obj"));
 
 	//textures
-	Textures.add("particleSheet", Texture::createFromFile("data/textures/particleSheet.png"));
-	Textures.add("lava", Texture::createFromFile("data/textures/lava.png"));
-	Textures.add("awesome", Texture::createFromFile("data/textures/awesome.png"));
+	Textures2D.add("particleSheet", Texture2D::createFromFile("data/textures/particleSheet.png"));
+	Textures2D.add("lava", Texture2D::createFromFile("data/textures/lava.png"));
+	Textures2D.add("awesome", Texture2D::createFromFile("data/textures/awesome.png"));
 	char pixels[4] = {char(200), char(20), char(20), char(255)};
-	Textures.add("nullRed", Texture::createFromRaw(pixels, 1, 1));
+	Textures2D.add("nullRed", Texture2D::createFromRaw(pixels, 1, 1));
 	char pixels2[4] = {char(20), char(200), char(20), char(255)};
-	Textures.add("nullGreen", Texture::createFromRaw(pixels2, 1, 1));
+	Textures2D.add("nullGreen", Texture2D::createFromRaw(pixels2, 1, 1));
 	char pixels3[4] = {char(20), char(20), char(200), char(255)};
-	Textures.add("nullBlue", Texture::createFromRaw(pixels3, 1, 1));
+	Textures2D.add("nullBlue", Texture2D::createFromRaw(pixels3, 1, 1));
 	char pixels4[4] = {char(70), char(30), char(80), char(255)};
-	Textures.add("nullBlack", Texture::createFromRaw(pixels4, 1, 1));
+	Textures2D.add("nullBlack", Texture2D::createFromRaw(pixels4, 1, 1));
 	char pixels5[4] = {char(255), char(255), char(255), char(255)};
-	Textures.add("nullWhite", Texture::createFromRaw(pixels5, 1, 1));
+	Textures2D.add("nullWhite", Texture2D::createFromRaw(pixels5, 1, 1));
 
 	//program
 	Programs.add("deferredModel", ShaderProgram::loadFromFile("data/shaders/standardDeferred.vert", "data/shaders/standardDeferred.frag"));

@@ -46,7 +46,7 @@ void DeferredModel::drawDeferred() const {
 	model.program->uniform("V")->set(cam->view);
 	model.program->uniform("ambient")->set(ambient);
 	model.program->uniform("specular")->set(specular);
-	model.program->uniform("diffuseTex")->set(Textures.get(tex));
+	model.program->uniform("diffuseTex")->set(Textures2D.get(tex));
 	model.draw();
 }
 

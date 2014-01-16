@@ -71,7 +71,7 @@ void ParticleSystem::addParticle(const Particle& p) {
 	particles.push_back(p);
 }
 
-void ParticleSystem::setTextureSheet(Texture* textureSheet, unsigned int textureCount) {
+void ParticleSystem::setTextureSheet(Texture2D* textureSheet, unsigned int textureCount) {
 	this->textureSheet = textureSheet;
 	this->textureCount = textureCount;
 }

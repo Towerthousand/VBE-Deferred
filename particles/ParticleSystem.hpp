@@ -12,13 +12,13 @@ class ParticleSystem : public GameObject {
 		void draw() const;
 		void addParticle(const Particle& p);
 		int getParticleCount() const { return particles.size(); }
-		void setTextureSheet(Texture* textureSheet, unsigned int textureCount);
+		void setTextureSheet(Texture2D* textureSheet, unsigned int textureCount);
 	private:
 		DeferredContainer* renderer;
 		std::list<Particle> particles;
 		Model model;
 		unsigned int textureCount;
-		Texture* textureSheet;
+		Texture2D* textureSheet;
 };
 
 #endif // PARTICLESYSTEM_HPP
