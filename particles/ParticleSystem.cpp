@@ -1,5 +1,4 @@
 #include "ParticleSystem.hpp"
-#include "SceneMain/Camera.hpp"
 #include "SceneMain/DeferredContainer.hpp"
 
 ParticleSystem::ParticleSystem() : textureCount(0), textureSheet(nullptr) {
@@ -54,14 +53,14 @@ void ParticleSystem::draw() const {
 		return;
 
 	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
-	if(!Input::isKeyDown(sf::Keyboard::P)) {
+	if(!Environment::getKeyboard()->isKeyHeld(Keyboard::P)) {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		model.program->uniform("modelViewMatrix")->set(cam->view*fullTransform);
+		model.program->uniform("modelViewMatrix")->set(cam->getView()*fullTransform);
 		model.program->uniform("projectionMatrix")->set(cam->projection);
 		model.program->uniform("texSize")->set(1.0f/float(textureCount));
 		model.program->uniform("textureSheet")->set(textureSheet);
 		model.program->uniform("depth")->set(renderer->getDepth());
-		model.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
+		model.program->uniform("invResolution")->set(vec2f(1.0f/Environment::getScreen()->getWidth(), 1.0f/Environment::getScreen()->getHeight()));
 		model.program->uniform("invProj")->set(glm::inverse(cam->projection));
 		model.draw();
 	}

@@ -69,5 +69,6 @@ void main(void) {
     for (int i=0;i<sampleNum;i++)
         visibility -= (1.0f/sampleNum)*(1.0-texture(sunDepth,vec3(shadowCoord.xy + poissonDisk[i]/700.0,(shadowCoord.z-bias)/shadowCoord.w)));
 
+    gl_FragDepth = texture(depth, vTexCoord).x;
     finalColor = vec4(vec3(valColor0.xyz*(0.05 + valColor1.z + visibility*cosTheta*0.6)), 1.0);
 }

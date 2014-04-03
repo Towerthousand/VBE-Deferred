@@ -12,24 +12,23 @@ SceneMain::SceneMain() : debugCounter(0.0), fpsCount(0) {
 	loadResources();
 
 	//GL stuff..:
-	glClearColor(0, 0, 0, 1);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDepthFunc(GL_LEQUAL);
-	glEnable(GL_CULL_FACE); //enable backface culling
-	glCullFace(GL_BACK);
-
-    getGame()->getWindow().setVerticalSyncEnabled(true);
+	GL_ASSERT(glClearColor(0, 0, 0, 1));
+	GL_ASSERT(glEnable(GL_DEPTH_TEST));
+	GL_ASSERT(glEnable(GL_BLEND));
+	GL_ASSERT(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+	GL_ASSERT(glDepthFunc(GL_LEQUAL));
+	GL_ASSERT(glEnable(GL_CULL_FACE)); //enable backface culling
+	GL_ASSERT(glCullFace(GL_BACK));
 
 	//add player cam
-	PlayerCamera* pCam = new PlayerCamera("playerCam", vec3f(0, 10, 15), vec3f(45, 0, 0));
-	pCam->projection = glm::perspective(FOV, float(SCRWIDTH)/float(SCRHEIGHT), ZNEAR, ZFAR);
+	PlayerCamera* pCam = new PlayerCamera("playerCam", vec3f(0, 10, 15));
+	pCam->projection = glm::perspective(60.0f, float(Environment::getScreen()->getWidth())/float(Environment::getScreen()->getHeight()), 0.01f, 100.0f);
 	pCam->addTo(this);
 
 	//add sun cam
-	Camera* sCam = new Camera("sunCam",vec3f(-10,10,10),vec3f(45,45,0));
-	sCam->projection = glm::ortho<float>(-25,25,-25,25,-10, 50);
+	Camera* sCam = new Camera("sunCam",vec3f(-10,10,10));
+	sCam->lookInDir(vec3f(-1,-1,0));
+	sCam->projection = glm::ortho<float>(-25,25,-25,25,-100, 50);
 	sCam->addTo(this);
 
 	//add deferred renderer
@@ -127,7 +126,6 @@ SceneMain::~SceneMain() {
 	Textures2D.clear();
 	Meshes.clear();
 	Programs.clear();
-	AudioManager::clear();
 }
 
 void SceneMain::loadResources() {
@@ -182,30 +180,30 @@ void SceneMain::update(float deltaTime) {
 		debugCounter--;
 		fpsCount = 0;
 	}
-	if(!Input::isKeyDown(sf::Keyboard::Space)) {
-		float circleWidth = 5+3*sin(GLOBALCLOCK.getElapsedTime().asSeconds());
+	if(!Environment::getKeyboard()->isKeyHeld(Keyboard::Space)) {
+		float circleWidth = 5+3*sin(Environment::getClock());
 		DeferredLight* light1 = (DeferredLight*)getGame()->getObjectByName("light1");
-		light1->pos = vec3f(circleWidth*sin(5*GLOBALCLOCK.getElapsedTime().asSeconds()), 2, circleWidth*cos(5*GLOBALCLOCK.getElapsedTime().asSeconds()));
+		light1->pos = vec3f(circleWidth*sin(5*Environment::getClock()), 2, circleWidth*cos(5*Environment::getClock()));
 		DeferredLight* light2 = (DeferredLight*)getGame()->getObjectByName("light2");
-		light2->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)), 2, circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)));
+		light2->pos = vec3f(circleWidth*sin(5*(Environment::getClock()-M_PI)), 2, circleWidth*cos(5*(Environment::getClock()-M_PI)));
 		DeferredLight* light3 = (DeferredLight*)getGame()->getObjectByName("light3");
-		light3->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)), 2, circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)));
+		light3->pos = vec3f(circleWidth*sin(5*(Environment::getClock()-M_PI/2)), 2, circleWidth*cos(5*(Environment::getClock()-M_PI/2)));
 		DeferredLight* light4 = (DeferredLight*)getGame()->getObjectByName("light4");
-		light4->pos = vec3f(circleWidth*sin(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)), 2, circleWidth*cos(5*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)));
+		light4->pos = vec3f(circleWidth*sin(5*(Environment::getClock()-M_PI*1.5)), 2, circleWidth*cos(5*(Environment::getClock()-M_PI*1.5)));
 	}
-    if(!Input::isKeyDown(sf::Keyboard::Space)) {
+	if(!Environment::getKeyboard()->isKeyHeld(Keyboard::Space)) {
         float circleWidth = 10;
         int speed = 1;
         DeferredModel* model1 = (DeferredModel*)getGame()->getObjectByName("monkeyRed");
-        model1->pos = vec3f(circleWidth*sin(speed*GLOBALCLOCK.getElapsedTime().asSeconds()), 8, circleWidth*cos(speed*GLOBALCLOCK.getElapsedTime().asSeconds()));
+		model1->pos = vec3f(circleWidth*sin(speed*Environment::getClock()), 8, circleWidth*cos(speed*Environment::getClock()));
         DeferredModel* model2 = (DeferredModel*)getGame()->getObjectByName("monkeyGreen");
-        model2->pos = vec3f(circleWidth*sin(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)), 8, circleWidth*cos(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI)));
+		model2->pos = vec3f(circleWidth*sin(speed*(Environment::getClock()-M_PI)), 8, circleWidth*cos(speed*(Environment::getClock()-M_PI)));
         DeferredModel* model3 = (DeferredModel*)getGame()->getObjectByName("monkeyBlue");
-        model3->pos = vec3f(circleWidth*sin(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)), 8, circleWidth*cos(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI/2)));
+		model3->pos = vec3f(circleWidth*sin(speed*(Environment::getClock()-M_PI/2)), 8, circleWidth*cos(speed*(Environment::getClock()-M_PI/2)));
         DeferredModel* model4 = (DeferredModel*)getGame()->getObjectByName("monkeyWhite");
-        model4->pos = vec3f(circleWidth*sin(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)), 8, circleWidth*cos(speed*(GLOBALCLOCK.getElapsedTime().asSeconds()-M_PI*1.5)));
+		model4->pos = vec3f(circleWidth*sin(speed*(Environment::getClock()-M_PI*1.5)), 8, circleWidth*cos(speed*(Environment::getClock()-M_PI*1.5)));
     }
-	if(Input::isMousePressed(sf::Mouse::Left)) {
+	if(Environment::getMouse()->isButtonPressed(Mouse::Left)) {
 		Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 		DeferredContainer* renderer = (DeferredContainer*)getGame()->getObjectByName("deferred");
 		vec3f color = glm::abs(glm::sphericalRand(1.0f));

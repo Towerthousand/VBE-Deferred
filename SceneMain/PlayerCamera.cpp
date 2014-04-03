@@ -1,22 +1,23 @@
 #include "PlayerCamera.hpp"
 
-PlayerCamera::PlayerCamera(const std::string& cameraName, const vec3f& pos, const vec3f& rot) :
-	Camera(cameraName, pos, rot) {
+PlayerCamera::PlayerCamera(const std::string& cameraName, const vec3f& pos) :
+	Camera(cameraName, pos) {
 	setName(cameraName);
 }
 
 void PlayerCamera::update(float deltaTime) {
 	//move player camera
-	vec3f dirFront(sin(rot.y*DEG_TO_RAD)*cos(rot.x*DEG_TO_RAD), -sin(rot.x*DEG_TO_RAD), -cos(rot.y*DEG_TO_RAD)*cos(rot.x*DEG_TO_RAD));
-	vec3f dirRight(-cos(rot.y*DEG_TO_RAD), 0, -sin(rot.y*DEG_TO_RAD));
+	vec3f front = getForward();
+	vec3f right = (glm::abs(front) != vec3f(0,1,0)? glm::cross(front,vec3f(0,1,0)) : vec3f(0,0,front.y));
 	float vel = 10.0f;
-	if(Input::isKeyDown(sf::Keyboard::S)) pos -= dirFront*deltaTime*vel;
-	if(Input::isKeyDown(sf::Keyboard::W)) pos += dirFront*deltaTime*vel;
-	if(Input::isKeyDown(sf::Keyboard::D)) pos -= dirRight*deltaTime*vel;
-	if(Input::isKeyDown(sf::Keyboard::A)) pos += dirRight*deltaTime*vel;
-	if(Input::getMouseDisplacement() != vec2i(0, 0))
-		rot += vec3f(Input::getMouseDisplacement().y*0.1f, Input::getMouseDisplacement().x*0.1f, 0);
-	//center mouse
-	Input::setMousePos(SCRWIDTH/2, SCRHEIGHT/2, getGame()->getWindow());
+	if(Environment::getKeyboard()->isKeyHeld(Keyboard::S)) pos -= front*deltaTime*vel;
+	if(Environment::getKeyboard()->isKeyHeld(Keyboard::W)) pos += front*deltaTime*vel;
+	if(Environment::getKeyboard()->isKeyHeld(Keyboard::D)) pos += right*deltaTime*vel;
+	if(Environment::getKeyboard()->isKeyHeld(Keyboard::A)) pos -= right*deltaTime*vel;
+	vec2f displacement = vec2f(Environment::getMouse()->getMousePosRelative())*0.1f;
+	if(Environment::getMouse()->getMousePosRelative() != vec2i(0, 0)) {
+		rotateLocal(displacement.y, vec3f(1,0,0));
+		rotateGlobal(displacement.x, vec3f(0,1,0));
+	}
 	Camera::update(deltaTime);
 }

@@ -1,6 +1,5 @@
 #include "DeferredLight.hpp"
 #include "DeferredContainer.hpp"
-#include "Camera.hpp"
 
 DeferredLight::DeferredLight() : pos(0.0f), color(1.0f), vel(0.0f), radius(15.0f), renderer((DeferredContainer*)getGame()->getObjectByName("deferred")) {
     quad.mesh = Meshes.get("quad");
@@ -15,7 +14,7 @@ void DeferredLight::update(float deltaTime) {
 	pos += vel*deltaTime;
 	transform = glm::translate(mat4f(1.0f), pos);
 	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
-	if(glm::length(cam->getWorldPos()-vec3f(fullTransform*vec4f(0,0,0,1.0))) > ZFAR)
+	if(glm::length(cam->getWorldPos()-vec3f(fullTransform*vec4f(0,0,0,1.0))) > 1000.0f)
 		removeAndDelete();
 }
 
@@ -32,7 +31,7 @@ void DeferredLight::draw() const {
 void DeferredLight::drawDeferredLight() const{
 	Camera* cam = (Camera*)getGame()->getObjectByName("playerCam");
 	vec3f posWorldSpace = vec3f(fullTransform*vec4f(0,0,0,1));
-	vec3f posViewSpace = vec3f(cam->view*vec4f(posWorldSpace,1.0));
+	vec3f posViewSpace = vec3f(cam->getView()*vec4f(posWorldSpace,1.0));
 
 	mat4f t(1.0);
 	if(glm::length(posViewSpace) > radius) {
@@ -49,12 +48,12 @@ void DeferredLight::drawDeferredLight() const{
 				  0      , 0      , 0      , 1);
 		t = glm::scale(rot, vec3f(radius));
 		t = glm::translate(t, vec3f(0, 0, 1));
-		quad.program->uniform("MVP")->set(cam->projection*cam->view*fullTransform*t);
+		quad.program->uniform("MVP")->set(cam->projection*cam->getView()*fullTransform*t);
     }
 	else
 		quad.program->uniform("MVP")->set(t);
 
-	quad.program->uniform("invResolution")->set(vec2f(1.0f/SCRWIDTH, 1.0f/SCRHEIGHT));
+	quad.program->uniform("invResolution")->set(vec2f(1.0f/Environment::getScreen()->getWidth(), 1.0f/Environment::getScreen()->getHeight()));
 	quad.program->uniform("color0")->set(renderer->getColor0());
 	quad.program->uniform("color1")->set(renderer->getColor1());
     quad.program->uniform("depth")->set(renderer->getDepth());

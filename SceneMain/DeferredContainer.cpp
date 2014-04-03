@@ -1,15 +1,14 @@
 #include "DeferredContainer.hpp"
-#include "Camera.hpp"
 
 DeferredContainer::DeferredContainer() : gBuffer(NULL), noBlur(NULL), horitzontalBlurred(NULL), shadowMap(NULL), drawMode(Deferred) {
     setName("deferred");
 	gBuffer = new RenderTarget();
-    gBuffer->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32); //Z-BUFFER
-    gBuffer->addTexture(RenderTarget::COLOR0, Texture::RGB8); //COLOR
-    gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMAL, BRIGHTNESS, SPECULAR FACTOR
+	gBuffer->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32); //Z-BUFFER
+	gBuffer->addTexture(RenderTarget::COLOR0, Texture::RGB8); //COLOR
+	gBuffer->addTexture(RenderTarget::COLOR1, Texture::RGBA16F); //NORMAL, BRIGHTNESS, SPECULAR FACTOR
 	gBuffer->build();
-    gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
-    gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer->getTextureForAttachment(RenderTarget::COLOR0)->setFilter(GL_NEAREST, GL_NEAREST);
+	gBuffer->getTextureForAttachment(RenderTarget::COLOR1)->setFilter(GL_NEAREST, GL_NEAREST);
 
 	shadowMap = new RenderTarget();
 	shadowMap->addTexture(RenderTarget::DEPTH, Texture::DEPTH_COMPONENT32);
@@ -60,28 +59,26 @@ void DeferredContainer::update(float deltaTime) {
 }
 
 void DeferredContainer::draw() const {
-    //G BUFFER
-    glDisable(GL_ALPHA_TEST);
-    glDisable(GL_BLEND);
-
+	//G BUFFER
+	GL_ASSERT(glDisable(GL_BLEND));
     drawMode = Deferred;
     RenderTarget::bind(gBuffer);
-    glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+	GL_ASSERT(glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT));
     ContainerObject::draw();
-    glEnable(GL_BLEND);
+	GL_ASSERT(glEnable(GL_BLEND));
 
     drawMode = Shadow;
     RenderTarget::bind(shadowMap);
-    glClear(GL_DEPTH_BUFFER_BIT);
+	GL_ASSERT(glClear(GL_DEPTH_BUFFER_BIT));
     ContainerObject::draw();
 
     RenderTarget::bind(noBlur);
-    glClear(GL_COLOR_BUFFER_BIT);
+	GL_ASSERT(glClear(GL_COLOR_BUFFER_BIT));
 
     //DEFERRED LIGHTS
-    glDisable(GL_DEPTH_TEST);
-    glBlendFunc(GL_ONE, GL_ONE);
-    glDepthMask(GL_FALSE);
+	GL_ASSERT(glDisable(GL_DEPTH_TEST));
+	GL_ASSERT(glBlendFunc(GL_ONE, GL_ONE));
+	GL_ASSERT(glDepthMask(GL_FALSE));
     drawMode = Light;
     ContainerObject::draw();
 
@@ -90,12 +87,12 @@ void DeferredContainer::draw() const {
     Camera* sCam = (Camera*)getGame()->getObjectByName("sunCam");
     quad.program = Programs.get("ambientPass");
     quad.program->uniform("MVP")->set(mat4f(1.0f));
-	quad.program->uniform("camMV")->set(cam->view*fullTransform);
+	quad.program->uniform("camMV")->set(cam->getView()*fullTransform);
     quad.program->uniform("color0")->set(getColor0());
     quad.program->uniform("color1")->set(getColor1());
     quad.program->uniform("invResolution")->set(vec2f(1.0f/noBlur->getWidth(), 1.0f/noBlur->getHeight()));
 	quad.program->uniform("invCamProj")->set(glm::inverse(cam->projection));
-	quad.program->uniform("invCamView")->set(glm::inverse(cam->view));
+	quad.program->uniform("invCamView")->set(glm::inverse(cam->getView()));
 	quad.program->uniform("lightDir")->set(sCam->getForward());
     glm::mat4 biasMatrix( //gets coords from [-1..1] to [0..1]
                           0.5, 0.0, 0.0, 0.0,
@@ -103,14 +100,14 @@ void DeferredContainer::draw() const {
                           0.0, 0.0, 0.5, 0.0,
                           0.5, 0.5, 0.5, 1.0
                           );
-    quad.program->uniform("depthMVP")->set(biasMatrix*(sCam->projection*sCam->view*fullTransform));
+	quad.program->uniform("depthMVP")->set(biasMatrix*(sCam->projection*sCam->getView()*fullTransform));
     quad.program->uniform("depth")->set(gBuffer->getTextureForAttachment(RenderTarget::DEPTH));
     quad.program->uniform("sunDepth")->set(shadowMap->getTextureForAttachment(RenderTarget::DEPTH));
     quad.draw();
 
     //BLUR MASK BUILDING
     RenderTarget::bind(blurMask);
-    glClear(GL_COLOR_BUFFER_BIT);
+	GL_ASSERT(glClear(GL_COLOR_BUFFER_BIT));
     quad.program = Programs.get("blurMaskPass");
     quad.program->uniform("MVP")->set(mat4f(1.0f));
     quad.program->uniform("color0")->set(noBlur->getTextureForAttachment(RenderTarget::COLOR0));
@@ -120,8 +117,8 @@ void DeferredContainer::draw() const {
 
     //BLUR
     RenderTarget::bind(horitzontalBlurred);
-    glClear(GL_COLOR_BUFFER_BIT);
-    if(!Input::isKeyDown(sf::Keyboard::B)) {
+	GL_ASSERT(glClear(GL_COLOR_BUFFER_BIT));
+	if(!Environment::getKeyboard()->isKeyHeld(Keyboard::B)) {
         quad.program = Programs.get("blurPassHoritzontal");
         quad.program->uniform("MVP")->set(mat4f(1.0f));
         quad.program->uniform("RTScene")->set(blurMask->getTextureForAttachment(RenderTarget::COLOR0));
@@ -130,8 +127,8 @@ void DeferredContainer::draw() const {
     }
 
     RenderTarget::bind(blurred);
-    glClear(GL_COLOR_BUFFER_BIT);
-    if(!Input::isKeyDown(sf::Keyboard::B)) {
+	GL_ASSERT(glClear(GL_COLOR_BUFFER_BIT));
+	if(!Environment::getKeyboard()->isKeyHeld(Keyboard::B)) {
         quad.program = Programs.get("blurPassVertical");
         quad.program->uniform("MVP")->set(mat4f(1.0f));
         quad.program->uniform("RTBlurH")->set(horitzontalBlurred->getTextureForAttachment(RenderTarget::COLOR0));
@@ -141,18 +138,17 @@ void DeferredContainer::draw() const {
 
     //BLUR + SCENE
     RenderTarget::bind(nullptr);
-    glClear(GL_COLOR_BUFFER_BIT);
+	GL_ASSERT(glClear(GL_COLOR_BUFFER_BIT));
     quad.program = Programs.get("textureToScreen");
     quad.program->uniform("MVP")->set(mat4f(1.0f));
-    quad.program->uniform("tex1")->set(noBlur->getTextureForAttachment(RenderTarget::COLOR0));
-    quad.program->uniform("tex2")->set(blurred->getTextureForAttachment(RenderTarget::COLOR0));
-    quad.program->uniform("invResolution")->set(vec2f(1.0f/(SCRWIDTH), 1.0f/(SCRHEIGHT)));
+	quad.program->uniform("tex1")->set(noBlur->getTextureForAttachment(RenderTarget::COLOR0));
+	quad.program->uniform("tex2")->set(blurred->getTextureForAttachment(RenderTarget::COLOR0));
+	quad.program->uniform("invResolution")->set(vec2f(1.0f/(Environment::getScreen()->getWidth()), 1.0f/(Environment::getScreen()->getHeight())));
     quad.draw();
 
-    glDepthMask(GL_TRUE);
-    glEnable(GL_DEPTH_TEST);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_ALPHA_TEST);
+	GL_ASSERT(glDepthMask(GL_TRUE));
+	GL_ASSERT(glEnable(GL_DEPTH_TEST));
+	GL_ASSERT(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 }
 
 DeferredContainer::DrawMode DeferredContainer::getMode() const {
